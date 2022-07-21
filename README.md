@@ -11,7 +11,7 @@ Since the hackathon is hosted by [Solana](https://solana.com/), we also use the 
 
 ## 🗺️ Demo Flow
 
-1. The NFT holder goes to a location of his choice where he/she would like to place the NFT.
+1. The NFT holder goes to a location of his choice where he would like to place the NFT.
 2. The NFT and the location coordinates are then sent from the holders wallet to our smart contract. The coordinates are additionally encrypted to prevent misuse or theft of the NFTs.
 3. Searchers can now use the app to see where the nearest NFTs are and make their way there.
 4. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
