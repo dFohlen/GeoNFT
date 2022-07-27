@@ -20,7 +20,22 @@ Since the hackathon is hosted by [Solana](https://solana.com/), we also use the 
 
 WIP
 
-## 🏗️ How to build/run
+## 🏗️ Getting started
+
+
+### Project structure
+
+In the project structure, you will see the following files and folders.
+
+program — This is the directory of Solana programs (Smart contracts)
+
+test — This is where javascript test code lives
+
+migrations — This is the deploy script
+
+app — This is where frontend is going to be built
+
+### How to build/run
 
 WIP
 
