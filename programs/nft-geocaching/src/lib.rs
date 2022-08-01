@@ -50,6 +50,7 @@ pub mod nft_geocaching {
 
         // TODO: Transfer NFT to player
 
+        geocache.active = 0;
         Ok(())
     }
 }
