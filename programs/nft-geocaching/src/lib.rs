@@ -62,7 +62,7 @@ pub struct Create<'info> {
     payer = player,
     space = 8 // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
     + 32 // 3.B) player: Pubkey needs 32 bytes
-    + 48 // 3.C) geocache: location bytes (WhatThreeWords)
+    + 32 // 3.C) geocache: location bytes
     + 1 // 3.D) active: 1 byte
     )]
     pub geocache: Account<'info, Geocache>,
