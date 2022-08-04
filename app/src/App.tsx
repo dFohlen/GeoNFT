@@ -1,14 +1,16 @@
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { CoinbaseWalletAdapter,
+import {
+    CoinbaseWalletAdapter,
     GlowWalletAdapter,
     PhantomWalletAdapter,
     SlopeWalletAdapter,
     SolflareWalletAdapter,
     SolletExtensionWalletAdapter,
     SolletWalletAdapter,
-    TorusWalletAdapter } from '@solana/wallet-adapter-wallets';
+    TorusWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import React, { FC, ReactNode, useMemo } from 'react';
 
@@ -41,14 +43,14 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
              * will be compiled into your application, and only the dependencies of wallets that
              * your users connect to will be loaded.
              */
-             new CoinbaseWalletAdapter(),
-             new GlowWalletAdapter({ network }),
-             new PhantomWalletAdapter(),
-             new SlopeWalletAdapter(),
-             new SolflareWalletAdapter({ network }),
-             new SolletExtensionWalletAdapter({ network }),
-             new SolletWalletAdapter({ network }),
-             new TorusWalletAdapter({ params: { network } })
+            new CoinbaseWalletAdapter(),
+            new GlowWalletAdapter({ network }),
+            new PhantomWalletAdapter(),
+            new SlopeWalletAdapter(),
+            new SolflareWalletAdapter({ network }),
+            new SolletExtensionWalletAdapter({ network }),
+            new SolletWalletAdapter({ network }),
+            new TorusWalletAdapter({ params: { network } }),
         ],
         []
     );
