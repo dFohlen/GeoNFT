@@ -1,8 +1,8 @@
 {
-    "name": "@solana/wallet-adapter-create-react-app-starter",
-    "version": "0.1.2",
-    "author": "Solana Maintainers <maintainers@solana.foundation>",
-    "repository": "https://github.com/solana-labs/wallet-adapter",
+    "name": "@nft-geocaching/app",
+    "version": "0.0.1",
+    "author": "Volker Dufner <dufnervolker@gmail.com>",
+    "repository": "",
     "license": "Apache-2.0",
     "publishConfig": {
         "access": "public"
@@ -64,6 +64,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "gitHead": "389767182619fc76ab939920f75cc7194ff77340"
+    }
 }
