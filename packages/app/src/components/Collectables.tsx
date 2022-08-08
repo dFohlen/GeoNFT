@@ -22,7 +22,7 @@ export default function Collectables() {
 
     return (
         <button onClick={onClick} disabled={!publicKey}>
-            Send 1 lamport to a random address!
+            Create Geocache!
         </button>
     );
 }
