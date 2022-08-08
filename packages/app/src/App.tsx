@@ -1,5 +1,5 @@
 import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {
     CoinbaseWalletAdapter,
@@ -18,6 +18,7 @@ import { useSnackbar } from 'notistack';
 import { BrowserRouter as BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import Navbar from './components/Navbar';
+import Collectables from './components/Collectables';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -80,14 +81,18 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const Content: FC = () => {
+    const { publicKey } = useWallet();
+
     return (
-        <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<WalletMultiButton />} />
-                </Routes>
-            </BrowserRouter>
-            <Navbar />
-        </Box>
+        <>
+            <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
+                <BrowserRouter>
+                    <Routes>
+                        { publicKey ? <Route path="/" element={<Collectables />} /> : <Route path="/" element={<WalletMultiButton />} /> }
+                    </Routes>
+                    <Navbar />
+                </BrowserRouter>
+            </Box>
+        </>
     );
 };
