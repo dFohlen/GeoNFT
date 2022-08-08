@@ -7,12 +7,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "app:build": "yarn hardhat:compile && yarn workspace @ipanema/app build",
-    "app:start": "yarn workspace @ipanema/app start",
-    "app:lint": "yarn workspace @ipanema/app lint",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "all:build": "yarn app:build && yarn backend:build",
-    "all:start": "yarn backend:start && yarn app:start"
   },
   "workspaces": {
     "packages": [
