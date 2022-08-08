@@ -88,7 +88,11 @@ const Content: FC = () => {
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
                 <BrowserRouter>
                     <Routes>
-                        { publicKey ? <Route path="/" element={<Collectables />} /> : <Route path="/" element={<WalletMultiButton />} /> }
+                        { !publicKey ? (
+                            <Route path="/" element={<WalletMultiButton />} />
+                        ) : (
+                            <Route path="/" element={<Collectables />} />
+                        )}
                     </Routes>
                     <Navbar />
                 </BrowserRouter>
