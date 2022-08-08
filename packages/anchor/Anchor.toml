@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-nft_geocaching = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+nft_geocaching = "6F3RNrQC7ko1bDhX142J1cKrivYWwu1oE3iNEotHwUUT"
 
 [registry]
 url = "https://api.apr.dev"
