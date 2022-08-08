@@ -2,7 +2,7 @@
 
 ## ℹ️ General Info
 
-This project is/was designed and implemented by the Capgemini Invent developers [Volker Dufner](https://github.com/dFohlen), [Tim Schmitz](https://github.com/0x0tim) and [Jonas Engelhardt](https://github.com/joengelh) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
+This project is/was designed and implemented by [Volker Dufner](https://github.com/dFohlen) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
 
 ## 📝 Concept
 
@@ -41,4 +41,4 @@ WIP
 
 ---
 
-Copyright: [Volker Dufner](https://github.com/dFohlen) @ Capgemini Invent | 2022
+Copyright: [Volker Dufner](https://github.com/dFohlen) | 2022
