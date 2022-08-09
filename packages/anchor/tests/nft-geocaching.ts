@@ -14,127 +14,223 @@
 
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
-import { expect } from "chai";
+import {
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  LAMPORTS_PER_SOL,
+  SYSVAR_RENT_PUBKEY,
+} from "@solana/web3.js";
 import { NftGeocaching } from "../target/types/nft_geocaching";
+import {
+  TOKEN_PROGRAM_ID,
+  createMint,
+  createAssociatedTokenAccount,
+  mintTo,
+  getAccount,
+} from "@solana/spl-token";
+import { expect } from "chai";
 
 describe("nft-geocaching", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
-
   const program = anchor.workspace.NftGeocaching as Program<NftGeocaching>;
-  const player = program.provider.publicKey;
-  const account = anchor.web3.Keypair.generate();
-  const account2 = anchor.web3.Keypair.generate();
 
-  it("Create Geocache", async () => {
-    const tx1 = await program.rpc.create({
-      accounts: {
-        geocache: account.publicKey,
-        player: player,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
-      signers: [account],
-    });
-    console.log("Transaction signature", tx1);
+  const hider = anchor.web3.Keypair.generate();
+  const seeker = anchor.web3.Keypair.generate();
 
-    const tx2 = await program.methods.create().rpc;
-    await program.rpc.create({
-      accounts: {
-        geocache: account2.publicKey,
-        player: player,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
-      signers: [account2],
-    });
-    console.log("Transaction signature", tx2);
+  let mint = null;
+  let hiderTokenAccount = null;
+  let seekerTokenAccount = null;
 
-    const geocache = await program.account.geocache.fetch(account.publicKey);
-    console.log("Geocache", geocache);
+  it("Initialize mint and token accounts", async () => {
+    // Airdrop to hider
+    await program.provider.connection.confirmTransaction(
+      await program.provider.connection.requestAirdrop(
+        hider.publicKey,
+        1000000000
+      ),
+      "confirmed"
+    );
 
-    expect(geocache.player.toString()).to.equal(player.toString());
-    expect(geocache.location).to.equal("");
-    expect(geocache.active).to.equal(0);
+    // Fund seeker account
+    await program.provider.sendAndConfirm(
+      (() => {
+        const tx = new Transaction();
+        tx.add(
+          SystemProgram.transfer({
+            fromPubkey: hider.publicKey,
+            toPubkey: seeker.publicKey,
+            lamports: 100000000,
+          })
+        );
+        return tx;
+      })(),
+      [hider]
+    );
+
+    // Create mint of token
+    mint = await createMint(
+      program.provider.connection,
+      hider,
+      hider.publicKey,
+      null,
+      0
+    );
+    console.log("mint", mint.toString());
+
+    // Create token accounts
+    hiderTokenAccount = await createAssociatedTokenAccount(
+      program.provider.connection,
+      hider,
+      mint,
+      hider.publicKey
+    );
+    seekerTokenAccount = await createAssociatedTokenAccount(
+      program.provider.connection,
+      seeker,
+      mint,
+      seeker.publicKey
+    );
+
+    // Mint to hider token account
+    await mintTo(
+      program.provider.connection,
+      hider,
+      mint,
+      hiderTokenAccount,
+      hider,
+      1
+    );
+
+    // Check balances
+    const hiderAccount = await getAccount(
+      program.provider.connection,
+      hiderTokenAccount
+    );
+    const seekerAccount = await getAccount(
+      program.provider.connection,
+      seekerTokenAccount
+    );
+    console.log("Hider amount: " + hiderAccount.amount);
+    console.log("Seeker amount: " + seekerAccount.amount);
+    expect(Number(hiderAccount.amount)).to.equal(1);
+    expect(Number(seekerAccount.amount)).to.equal(0);
   });
 
-  it("Set Geocache", async () => {
-    // TODO: Set the NFT to the geocache account
-    const tx = await program.rpc.setGeocache("52.516181,13.376935", {
-      accounts: {
-        geocache: account.publicKey,
-        player: player,
-      },
-    });
+  it("Create Geocache", async () => {
+    // Geocache PDA
+    const [geocacheAddress, geocacheBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(anchor.utils.bytes.utf8.encode("geocache"))],
+        program.programId
+      );
+    // Vault PDA
+    const [vaultAddress, vaultBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(anchor.utils.bytes.utf8.encode("vault"))],
+        program.programId
+      );
+    console.log("Geocache PDA: " + geocacheAddress.toString());
+    console.log("Vault PDA: " + vaultAddress.toString());
+    console.log("Geocache bump: " + geocacheBump.toString());
+    console.log("Vault bump: " + vaultBump.toString());
+
+    const tx = await program.methods
+      .createGeocache(vaultBump, "52.516181,13.376935")
+      .accounts({
+        geocache: geocacheAddress,
+        tokenAccount: vaultAddress,
+        hiderTokenAccount: hiderTokenAccount,
+        hider: hider.publicKey,
+        mint: mint,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .signers([hider])
+      .rpc();
     console.log("Transaction signature", tx);
 
-    const geocache = await program.account.geocache.fetch(account.publicKey);
-    console.log("Geocache", geocache);
-
-    expect(geocache.player.toString()).to.equal(player.toString());
-    expect(geocache.location).to.equal("52.516181,13.376935");
-    expect(geocache.active).to.equal(1);
+    const hiderAccount = await getAccount(
+      program.provider.connection,
+      hiderTokenAccount
+    );
+    const vaultAccount = await getAccount(
+      program.provider.connection,
+      vaultAddress
+    );
+    const seekerAccount = await getAccount(
+      program.provider.connection,
+      seekerTokenAccount
+    );
+    console.log("Hider amount: " + hiderAccount.amount);
+    console.log("Vault amount: " + vaultAccount.amount);
+    console.log("Seeker amount: " + seekerAccount.amount);
+    expect(Number(hiderAccount.amount)).to.equal(0);
+    expect(Number(vaultAccount.amount)).to.equal(1);
+    expect(Number(seekerAccount.amount)).to.equal(0);
   });
 
   it("Get Geocache", async () => {
-    // TODO: Get the NFT from the account
-    const tx = await program.rpc.getGeocache({
-      accounts: {
-        geocache: account.publicKey,
-      },
-    });
+    // Geocache PDA
+    const [geocacheAddress, geocacheBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(anchor.utils.bytes.utf8.encode("geocache"))],
+        program.programId
+      );
+    // Vault PDA
+    const [vaultAddress, vaultBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from(anchor.utils.bytes.utf8.encode("vault"))],
+        program.programId
+      );
+    console.log("Geocache PDA: " + geocacheAddress.toString());
+    console.log("Vault PDA: " + vaultAddress.toString());
+    console.log("Geocache bump: " + geocacheBump.toString());
+    console.log("Vault bump: " + vaultBump.toString());
+
+    const tx = await program.methods
+      .getGeocache(vaultBump)
+      .accounts({
+        geocache: geocacheAddress,
+        tokenAccount: vaultAddress,
+        seekerTokenAccount: seekerTokenAccount,
+        seeker: seeker.publicKey,
+        mint: mint,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .signers([seeker])
+      .rpc();
     console.log("Transaction signature", tx);
 
-    const geocache = await program.account.geocache.fetch(account.publicKey);
-    console.log("Geocache", geocache);
+    const vaultAccount = await getAccount(
+      program.provider.connection,
+      vaultAddress
+    );
+    const hiderAccount = await getAccount(
+      program.provider.connection,
+      hiderTokenAccount
+    );
+    const seekerAccount = await getAccount(
+      program.provider.connection,
+      seekerTokenAccount
+    );
+    console.log("Hider amount: " + hiderAccount.amount);
+    console.log("Vault amount: " + vaultAccount.amount);
+    console.log("Seeker amount: " + seekerAccount.amount);
+    expect(Number(hiderAccount.amount)).to.equal(0);
+    expect(Number(vaultAccount.amount)).to.equal(0);
+    expect(Number(seekerAccount.amount)).to.equal(1);
 
-    expect(geocache.player.toString()).to.equal(player.toString());
+    const geocache = await program.account.geocache.fetch(geocacheAddress);
+    console.log("Geocache owner: " + geocache.owner.toString());
+    console.log("Geocache location: " + geocache.location.toString());
+    console.log("Geocache active: " + geocache.active);
+    expect(geocache.owner.toString()).to.equal(hider.publicKey.toString());
     expect(geocache.location).to.equal("52.516181,13.376935");
     expect(geocache.active).to.equal(0);
-  });
-
-  it("Get Geocaches", async () => {
-    const geocaches = await program.provider.connection.getProgramAccounts(
-      program.programId
-    );
-    console.log("Geocaches", geocaches);
-
-    expect(geocaches.length).to.equal(2);
-    expect(
-      geocaches[0].account.data.readInt8(
-        8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-          32 + // 3.B) player: Pubkey needs 32 bytes
-          32 // 3.C) geocache: location bytes
-      )
-    ).to.equal(0);
-    expect(
-      geocaches[1].account.data.readInt8(
-        8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-          32 + // 3.B) player: Pubkey needs 32 bytes
-          32 // 3.C) geocache: location bytes
-      )
-    ).to.equal(0);
-    console.log(
-      "Location",
-      geocaches[0].account.data
-        .slice(
-          8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-            32, // 3.B) player: Pubkey needs 32 bytes
-          8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-            32 + // 3.B) player: Pubkey needs 32 bytes
-            32 // 3.C) geocache: location bytes
-        )
-        .toString()
-    );
-    console.log(
-      "Location",
-      geocaches[1].account.data
-        .slice(
-          8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-            32, // 3.B) player: Pubkey needs 32 bytes
-          8 + // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-            32 + // 3.B) player: Pubkey needs 32 bytes
-            32 // 3.C) geocache: location bytes
-        )
-        .toString()
-    );
   });
 });
