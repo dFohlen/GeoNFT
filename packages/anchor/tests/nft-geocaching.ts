@@ -36,12 +36,17 @@ describe("nft-geocaching", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const program = anchor.workspace.NftGeocaching as Program<NftGeocaching>;
 
+  const geocacheAccount = anchor.web3.Keypair.generate();
+  const geocache2Account = anchor.web3.Keypair.generate();
+
   const hider = anchor.web3.Keypair.generate();
   const seeker = anchor.web3.Keypair.generate();
+  const seeker2 = anchor.web3.Keypair.generate();
 
   let mint = null;
   let hiderTokenAccount = null;
   let seekerTokenAccount = null;
+  let seeker2TokenAccount = null;
 
   it("Initialize mint and token accounts", async () => {
     // Airdrop to hider
@@ -61,6 +66,11 @@ describe("nft-geocaching", () => {
           SystemProgram.transfer({
             fromPubkey: hider.publicKey,
             toPubkey: seeker.publicKey,
+            lamports: 100000000,
+          }),
+          SystemProgram.transfer({
+            fromPubkey: hider.publicKey,
+            toPubkey: seeker2.publicKey,
             lamports: 100000000,
           })
         );
@@ -92,6 +102,12 @@ describe("nft-geocaching", () => {
       mint,
       seeker.publicKey
     );
+    seeker2TokenAccount = await createAssociatedTokenAccount(
+      program.provider.connection,
+      seeker2,
+      mint,
+      seeker2.publicKey
+    );
 
     // Mint to hider token account
     await mintTo(
@@ -100,7 +116,7 @@ describe("nft-geocaching", () => {
       mint,
       hiderTokenAccount,
       hider,
-      1
+      2
     );
 
     // Check balances
@@ -114,32 +130,24 @@ describe("nft-geocaching", () => {
     );
     console.log("Hider amount: " + hiderAccount.amount);
     console.log("Seeker amount: " + seekerAccount.amount);
-    expect(Number(hiderAccount.amount)).to.equal(1);
+    expect(Number(hiderAccount.amount)).to.equal(2);
     expect(Number(seekerAccount.amount)).to.equal(0);
   });
 
   it("Create Geocache", async () => {
-    // Geocache PDA
-    const [geocacheAddress, geocacheBump] =
-      await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(anchor.utils.bytes.utf8.encode("geocache"))],
-        program.programId
-      );
     // Vault PDA
     const [vaultAddress, vaultBump] =
       await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(anchor.utils.bytes.utf8.encode("vault"))],
+        [geocacheAccount.publicKey.toBytes()],
         program.programId
       );
-    console.log("Geocache PDA: " + geocacheAddress.toString());
     console.log("Vault PDA: " + vaultAddress.toString());
-    console.log("Geocache bump: " + geocacheBump.toString());
     console.log("Vault bump: " + vaultBump.toString());
 
     const tx = await program.methods
       .createGeocache(vaultBump, "52.516181,13.376935")
       .accounts({
-        geocache: geocacheAddress,
+        geocache: geocacheAccount.publicKey,
         tokenAccount: vaultAddress,
         hiderTokenAccount: hiderTokenAccount,
         hider: hider.publicKey,
@@ -148,7 +156,7 @@ describe("nft-geocaching", () => {
         tokenProgram: TOKEN_PROGRAM_ID,
         rent: SYSVAR_RENT_PUBKEY,
       })
-      .signers([hider])
+      .signers([geocacheAccount, hider])
       .rpc();
     console.log("Transaction signature", tx);
 
@@ -167,33 +175,25 @@ describe("nft-geocaching", () => {
     console.log("Hider amount: " + hiderAccount.amount);
     console.log("Vault amount: " + vaultAccount.amount);
     console.log("Seeker amount: " + seekerAccount.amount);
-    expect(Number(hiderAccount.amount)).to.equal(0);
+    expect(Number(hiderAccount.amount)).to.equal(1);
     expect(Number(vaultAccount.amount)).to.equal(1);
     expect(Number(seekerAccount.amount)).to.equal(0);
   });
 
   it("Get Geocache", async () => {
-    // Geocache PDA
-    const [geocacheAddress, geocacheBump] =
-      await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(anchor.utils.bytes.utf8.encode("geocache"))],
-        program.programId
-      );
     // Vault PDA
     const [vaultAddress, vaultBump] =
       await anchor.web3.PublicKey.findProgramAddress(
-        [Buffer.from(anchor.utils.bytes.utf8.encode("vault"))],
+        [geocacheAccount.publicKey.toBytes()],
         program.programId
       );
-    console.log("Geocache PDA: " + geocacheAddress.toString());
     console.log("Vault PDA: " + vaultAddress.toString());
-    console.log("Geocache bump: " + geocacheBump.toString());
     console.log("Vault bump: " + vaultBump.toString());
 
     const tx = await program.methods
       .getGeocache(vaultBump)
       .accounts({
-        geocache: geocacheAddress,
+        geocache: geocacheAccount.publicKey,
         tokenAccount: vaultAddress,
         seekerTokenAccount: seekerTokenAccount,
         seeker: seeker.publicKey,
@@ -221,16 +221,93 @@ describe("nft-geocaching", () => {
     console.log("Hider amount: " + hiderAccount.amount);
     console.log("Vault amount: " + vaultAccount.amount);
     console.log("Seeker amount: " + seekerAccount.amount);
-    expect(Number(hiderAccount.amount)).to.equal(0);
+    expect(Number(hiderAccount.amount)).to.equal(1);
     expect(Number(vaultAccount.amount)).to.equal(0);
     expect(Number(seekerAccount.amount)).to.equal(1);
 
-    const geocache = await program.account.geocache.fetch(geocacheAddress);
+    const geocache = await program.account.geocache.fetch(
+      geocacheAccount.publicKey
+    );
     console.log("Geocache owner: " + geocache.owner.toString());
     console.log("Geocache location: " + geocache.location.toString());
     console.log("Geocache active: " + geocache.active);
     expect(geocache.owner.toString()).to.equal(hider.publicKey.toString());
     expect(geocache.location).to.equal("52.516181,13.376935");
     expect(geocache.active).to.equal(0);
+  });
+
+  it("Get Geocache with another account", async () => {
+    // Vault PDA
+    const [vaultAddress, vaultBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [geocacheAccount.publicKey.toBytes()],
+        program.programId
+      );
+    console.log("Vault PDA: " + vaultAddress.toString());
+    console.log("Vault bump: " + vaultBump.toString());
+
+    const tx = await program.methods
+      .getGeocache(vaultBump)
+      .accounts({
+        geocache: geocacheAccount.publicKey,
+        tokenAccount: vaultAddress,
+        seekerTokenAccount: seeker2TokenAccount,
+        seeker: seeker2.publicKey,
+        mint: mint,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .signers([seeker2])
+      .rpc();
+    console.log("Transaction signature", tx);
+
+    // Should throw an error
+  });
+
+  it("Create second Geocache", async () => {
+    // Vault PDA
+    const [vaultAddress, vaultBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [geocache2Account.publicKey.toBytes()],
+        program.programId
+      );
+    console.log("Vault PDA: " + vaultAddress.toString());
+    console.log("Vault bump: " + vaultBump.toString());
+
+    const tx = await program.methods
+      .createGeocache(vaultBump, "180.0000000,-180.0000000")
+      .accounts({
+        geocache: geocache2Account.publicKey,
+        tokenAccount: vaultAddress,
+        hiderTokenAccount: hiderTokenAccount,
+        hider: hider.publicKey,
+        mint: mint,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .signers([geocache2Account, hider])
+      .rpc();
+    console.log("Transaction signature", tx);
+
+    const vaultAccount = await getAccount(
+      program.provider.connection,
+      vaultAddress
+    );
+    const hiderAccount = await getAccount(
+      program.provider.connection,
+      hiderTokenAccount
+    );
+    const seekerAccount = await getAccount(
+      program.provider.connection,
+      seeker2TokenAccount
+    );
+    console.log("Hider amount: " + hiderAccount.amount);
+    console.log("Vault amount: " + vaultAccount.amount);
+    console.log("Seeker amount: " + seekerAccount.amount);
+    expect(Number(hiderAccount.amount)).to.equal(0);
+    expect(Number(vaultAccount.amount)).to.equal(1);
+    expect(Number(seekerAccount.amount)).to.equal(0);
   });
 });

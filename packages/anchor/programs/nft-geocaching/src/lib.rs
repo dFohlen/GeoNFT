@@ -12,7 +12,6 @@
  **********************************************************************************
  */
 
-use std::mem::size_of;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
@@ -46,12 +45,13 @@ pub mod nft_geocaching {
             1,
         )?;
 
-        // geocache.active = 1;
+        geocache.active = 1;
         Ok(())
     }
 
     pub fn get_geocache(ctx: Context<GetGeocache>, bump: u8) -> Result<()> {
         let geocache = &mut ctx.accounts.geocache;
+        require!(geocache.active == 1, Errors::GeocacheNotActive);
 
         anchor_spl::token::transfer(
             CpiContext::new_with_signer(
@@ -67,10 +67,7 @@ pub mod nft_geocaching {
                         .to_account_info(),
                     authority: ctx.accounts.token_account.to_account_info(),
                 },
-                &[&[
-                    b"vault",
-                    &[bump],
-                ]],
+                &[&[geocache.key().as_ref(), &[bump]]],
             ),
             1,
         )?;
@@ -87,7 +84,8 @@ pub struct Geocache {
     // Owner of the geocache
     location: String,
     // Location of the geocache
-    active: u8,       // Whether the geocache is active or not
+    active: u8,
+    // Whether the geocache is active or not
 }
 
 #[derive(Accounts)]
@@ -99,9 +97,10 @@ pub struct CreateGeocache<'info> {
     #[account(
     init,
     payer = hider,
-    space = size_of::< Geocache > (),
-    seeds = [b"geocache"],
-    bump
+    space = 8 // all accounts need 8 bytes for the account discriminator prepended to the account
+    + 32 // owner: Pubkey needs 32 bytes
+    + 32 // location: 32 bytes
+    + 1 // active: 1 byte
     )]
     geocache: Account<'info, Geocache>,
 
@@ -110,12 +109,12 @@ pub struct CreateGeocache<'info> {
     payer = hider,
     token::mint = mint,
     token::authority = token_account,
-    seeds = [b"vault"],
+    seeds = [geocache.key().as_ref()],
     bump
     )]
     token_account: Account<'info, TokenAccount>,
 
-    #[account(mut)]
+    #[account(mut, constraint = hider_token_account.owner == hider.key(), constraint = hider_token_account.amount >= 1)]
     hider_token_account: Account<'info, TokenAccount>,
 
     #[account(mut)]
@@ -144,4 +143,10 @@ pub struct GetGeocache<'info> {
     system_program: Program<'info, System>,
     token_program: Program<'info, Token>,
     rent: Sysvar<'info, Rent>,
+}
+
+#[error_code]
+pub enum Errors {
+    #[msg("The geocache is not active")]
+    GeocacheNotActive,
 }
