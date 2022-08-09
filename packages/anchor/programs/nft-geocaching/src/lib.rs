@@ -12,7 +12,9 @@
  **********************************************************************************
  */
 
+use std::mem::size_of;
 use anchor_lang::prelude::*;
+use anchor_spl::token::{Mint, Token, TokenAccount};
 
 declare_id!("6F3RNrQC7ko1bDhX142J1cKrivYWwu1oE3iNEotHwUUT");
 
@@ -20,81 +22,126 @@ declare_id!("6F3RNrQC7ko1bDhX142J1cKrivYWwu1oE3iNEotHwUUT");
 pub mod nft_geocaching {
     use super::*;
 
-    pub fn create(ctx: Context<Create>) -> Result<()> {
+    pub fn create_geocache(ctx: Context<CreateGeocache>, _bump: u8, location: String) -> Result<()> {
         let geocache = &mut ctx.accounts.geocache;
-        geocache.player = ctx.accounts.player.key();
-        geocache.location = ("").to_string();
-        geocache.active = 0;
-        Ok(())
-    }
-
-    pub fn set_geocache(ctx: Context<SetGeocache>, location: String) -> Result<()> {
-        // TODO: Validate NFT is transferred to the Smart Contract
-
-        let geocache = &mut ctx.accounts.geocache;
-
-        require!(
-            geocache.player == ctx.accounts.player.key(),
-            Errors::NotTheOwner
-        );
-
+        geocache.owner = ctx.accounts.hider.key();
         geocache.location = location;
-        geocache.active = 1;
+
+        anchor_spl::token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                anchor_spl::token::Transfer {
+                    from: ctx
+                        .accounts
+                        .hider_token_account
+                        .to_account_info(),
+                    to: ctx
+                        .accounts
+                        .token_account
+                        .to_account_info(),
+                    authority: ctx.accounts.hider.to_account_info(),
+                },
+                &[],
+            ),
+            1,
+        )?;
+
+        // geocache.active = 1;
         Ok(())
     }
 
-    pub fn get_geocache(ctx: Context<GetGeocache>) -> Result<()> {
+    pub fn get_geocache(ctx: Context<GetGeocache>, bump: u8) -> Result<()> {
         let geocache = &mut ctx.accounts.geocache;
 
-        require!(geocache.active == 1, Errors::NotActive);
-
-        // TODO: Transfer NFT to player
+        anchor_spl::token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                anchor_spl::token::Transfer {
+                    from: ctx
+                        .accounts
+                        .token_account
+                        .to_account_info(),
+                    to: ctx
+                        .accounts
+                        .seeker_token_account
+                        .to_account_info(),
+                    authority: ctx.accounts.token_account.to_account_info(),
+                },
+                &[&[
+                    b"vault",
+                    &[bump],
+                ]],
+            ),
+            1,
+        )?;
 
         geocache.active = 0;
         Ok(())
     }
 }
 
-#[derive(Accounts)]
-pub struct Create<'info> {
-    #[account(
-    init,
-    payer = player,
-    space = 8 // 3.A) all accounts need 8 bytes for the account discriminator prepended to the account
-    + 32 // 3.B) player: Pubkey needs 32 bytes
-    + 32 // 3.C) geocache: location bytes
-    + 1 // 3.D) active: 1 byte
-    )]
-    pub geocache: Account<'info, Geocache>,
-    #[account(mut)]
-    pub player: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
 
 #[account] // An attribute for a data structure representing a Solana account.
 pub struct Geocache {
-    pub player: Pubkey,   // Owner of the geocache
-    pub location: String, // Location of the geocache
-    pub active: u8,       // Whether the geocache is active or not
+    owner: Pubkey,
+    // Owner of the geocache
+    location: String,
+    // Location of the geocache
+    active: u8,       // Whether the geocache is active or not
 }
 
 #[derive(Accounts)]
-pub struct SetGeocache<'info> {
+#[instruction(bump: u8)]
+pub struct CreateGeocache<'info> {
     #[account(mut)]
-    pub geocache: Account<'info, Geocache>,
-    pub player: Signer<'info>,
+    hider: Signer<'info>,
+
+    #[account(
+    init,
+    payer = hider,
+    space = size_of::< Geocache > (),
+    seeds = [b"geocache"],
+    bump
+    )]
+    geocache: Account<'info, Geocache>,
+
+    #[account(
+    init,
+    payer = hider,
+    token::mint = mint,
+    token::authority = token_account,
+    seeds = [b"vault"],
+    bump
+    )]
+    token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    hider_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    mint: Account<'info, Mint>,
+    system_program: Program<'info, System>,
+    token_program: Program<'info, Token>,
+    rent: Sysvar<'info, Rent>,
 }
 
 #[derive(Accounts)]
 pub struct GetGeocache<'info> {
     #[account(mut)]
-    pub geocache: Account<'info, Geocache>,
-}
+    seeker: Signer<'info>,
 
-#[error_code]
-pub enum Errors {
-    #[msg("Only the owner of the item can set the location")]
-    NotTheOwner,
-    #[msg("The geocache is not active")]
-    NotActive,
+    #[account(mut)]
+    geocache: Account<'info, Geocache>,
+
+    #[account(mut)]
+    token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    pub seeker_token_account: Account<'info, TokenAccount>,
+
+    #[account(mut)]
+    mint: Account<'info, Mint>,
+    system_program: Program<'info, System>,
+    token_program: Program<'info, Token>,
+    rent: Sysvar<'info, Rent>,
 }
