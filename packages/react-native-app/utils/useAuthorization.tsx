@@ -1,0 +1,135 @@
+import {PublicKey} from '@solana/web3.js';
+import {
+  AuthorizationResult,
+  AuthorizeAPI,
+  AuthToken,
+  Base64EncodedAddress,
+  DeauthorizeAPI,
+  ReauthorizeAPI,
+} from '@solana-mobile/mobile-wallet-adapter-protocol';
+import {toUint8Array} from 'js-base64';
+import {useCallback, useMemo} from 'react';
+import useSWR from 'swr';
+
+export type Account = Readonly<{
+  address: Base64EncodedAddress;
+  publicKey: PublicKey;
+}>;
+
+type Authorization = Readonly<{
+  accounts: Account[];
+  authToken: AuthToken;
+  selectedAccount: Account;
+}>;
+
+function getAccountFromAddress(address: Base64EncodedAddress): Account {
+  return {
+    address,
+    publicKey: getPublicKeyFromAddress(address),
+  };
+}
+
+function getAuthorizationFromAuthorizationResult(
+  authorizationResult: AuthorizationResult,
+  previouslySelectedAccount?: Account,
+): Authorization {
+  let selectedAccount: Account;
+  if (
+    // We have yet to select an account.
+    previouslySelectedAccount == null ||
+    // The previously selected account is no longer in the set of authorized addresses.
+    authorizationResult.addresses.indexOf(previouslySelectedAccount.address) ===
+      -1
+  ) {
+    const firstAddress = authorizationResult.addresses[0];
+    selectedAccount = getAccountFromAddress(firstAddress);
+  } else {
+    selectedAccount = previouslySelectedAccount;
+  }
+  return {
+    accounts: authorizationResult.addresses.map(getAccountFromAddress),
+    authToken: authorizationResult.auth_token,
+    selectedAccount,
+  };
+}
+
+function getPublicKeyFromAddress(address: Base64EncodedAddress): PublicKey {
+  const publicKeyByteArray = toUint8Array(address);
+  return new PublicKey(publicKeyByteArray);
+}
+
+export const APP_IDENTITY = {
+  name: 'React Native dApp',
+};
+
+export default function useAuthorization() {
+  const {data: authorization, mutate: setAuthorization} = useSWR<
+    Authorization | null | undefined
+  >('authorization');
+  const handleAuthorizationResult = useCallback(
+    async (
+      authorizationResult: AuthorizationResult,
+    ): Promise<Authorization> => {
+      const nextAuthorization = getAuthorizationFromAuthorizationResult(
+        authorizationResult,
+        authorization?.selectedAccount,
+      );
+      await setAuthorization(nextAuthorization);
+      return nextAuthorization;
+    },
+    [authorization, setAuthorization],
+  );
+  const authorizeSession = useCallback(
+    async (wallet: AuthorizeAPI & ReauthorizeAPI) => {
+      const authorizationResult = await (authorization
+        ? wallet.reauthorize({
+            auth_token: authorization.authToken,
+          })
+        : wallet.authorize({
+            cluster: 'devnet',
+            identity: APP_IDENTITY,
+          }));
+      return (await handleAuthorizationResult(authorizationResult))
+        .selectedAccount;
+    },
+    [authorization],
+  );
+  const deauthorizeSession = useCallback(
+    async (wallet: DeauthorizeAPI) => {
+      if (authorization?.authToken == null) {
+        return;
+      }
+      await wallet.deauthorize({auth_token: authorization.authToken});
+      setAuthorization(null);
+    },
+    [authorization, setAuthorization],
+  );
+  const onChangeAccount = useCallback((nextSelectedAccount: Account) => {
+    setAuthorization(currentAuthorization => {
+      if (
+        !currentAuthorization?.accounts.some(
+          ({address}) => address === nextSelectedAccount.address,
+        )
+      ) {
+        throw new Error(
+          `${nextSelectedAccount.address} is not one of the available addresses`,
+        );
+      }
+
+      return {
+        ...currentAuthorization,
+        selectedAccount: nextSelectedAccount,
+      };
+    });
+  }, []);
+  return useMemo(
+    () => ({
+      accounts: authorization?.accounts ?? null,
+      authorizeSession,
+      deauthorizeSession,
+      onChangeAccount,
+      selectedAccount: authorization?.selectedAccount ?? null,
+    }),
+    [authorization, authorizeSession, deauthorizeSession, onChangeAccount],
+  );
+}
