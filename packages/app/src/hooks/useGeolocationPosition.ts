@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useSnackbar } from 'notistack';
 
 export function useGeolocationPosition() {
     const [geolocationPosition, setGeolocationPosition] = useState<GeolocationPosition>();
+    const { enqueueSnackbar } = useSnackbar();
 
     function getGeolocationPosition() {
         const options = {
@@ -19,7 +21,8 @@ export function useGeolocationPosition() {
         }
 
         function error(error: GeolocationPositionError) {
-            console.warn(`ERROR(${error.code}): ${error.message}`);
+            console.warn(`Geolocation error: (${error.code}): ${error.message}`);
+            enqueueSnackbar(`Geolocation error: (${error.code}): ${error.message}`, { variant: 'error' });
         }
 
         navigator.geolocation.getCurrentPosition(success, error, options);
