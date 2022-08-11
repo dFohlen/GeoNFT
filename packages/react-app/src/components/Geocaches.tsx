@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAnchor } from '../hooks/useAnchor';
 import { getGeocaches } from '../api/getGeocaches';
 import { ProgramAccount } from '@project-serum/anchor';
+import GeocachesList from './GeocachesList';
 
 export default function Geocaches() {
     const program = useAnchor();
@@ -40,12 +41,7 @@ export default function Geocaches() {
                     <p>No geocaches</p>
                 </div>
             ) : (
-                geocaches?.map((geocache) => (
-                    <div key={geocache.publicKey.toString()}>
-                        <p>{geocache.publicKey.toString()}</p>
-                        <p>{geocache.account.location}</p>
-                    </div>
-                ))
+                <GeocachesList geocaches={geocaches}></GeocachesList>
             )}
         </>
     );
