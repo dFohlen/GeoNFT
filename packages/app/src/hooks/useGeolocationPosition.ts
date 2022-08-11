@@ -26,7 +26,10 @@ export function useGeolocationPosition() {
     }
 
     useEffect(() => {
-        getGeolocationPosition();
-    }, []);
+        if (!geolocationPosition) {
+            getGeolocationPosition();
+        }
+    }),
+        [geolocationPosition];
     return geolocationPosition;
 }

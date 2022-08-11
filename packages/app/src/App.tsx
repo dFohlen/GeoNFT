@@ -59,7 +59,7 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
             new SolletWalletAdapter({ network }),
             new TorusWalletAdapter({ params: { network } }),
         ],
-        []
+        [network]
     );
 
     const { enqueueSnackbar } = useSnackbar();
