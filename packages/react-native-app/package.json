@@ -1,5 +1,6 @@
 {
   "name": "@solana-mobile/example-react-native-app",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -10,6 +11,8 @@
     "preinstall": "rm -rf node_modules/ && (cd ./js/ && yarn && yarn build)"
   },
   "dependencies": {
+    "@nft-geocaching/anchor": "^0.0.1",
+    "@project-serum/anchor": "^0.25.0",
     "@react-native-async-storage/async-storage": "^1.17.7",
     "@solana-mobile/mobile-wallet-adapter-protocol": "file:./js/packages/mobile-wallet-adapter-protocol",
     "@solana-mobile/mobile-wallet-adapter-protocol-web3js": "file:./js/packages/mobile-wallet-adapter-protocol-web3js",
