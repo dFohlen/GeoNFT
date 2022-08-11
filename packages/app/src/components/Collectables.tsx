@@ -1,19 +1,20 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
-import { useAnchorWallet, useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { getNFTs } from '../api/getNFTs';
-import React, { FC, useCallback } from 'react';
+import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
 import { createGeocache } from '../api/createGeocache';
 import { useGeolocationPosition } from '../hooks/useGeolocationPosition';
-import { setGeocacheLocation } from '../api/setGeocacheLocation';
+import { ParsedAccountData } from '@solana/web3.js';
+import { useAnchor } from '../hooks/useAnchor';
+import { useSnackbar } from 'notistack';
 
 export default function Collectables() {
-    const { connection } = useConnection();
-    const { publicKey } = useWallet();
-    const wallet = useAnchorWallet();
+    const { enqueueSnackbar } = useSnackbar();
+    const [nfts, setNfts] = useState<ParsedAccountData[]>();
+    const program = useAnchor();
     const location = useGeolocationPosition();
 
     const onClick = useCallback(async () => {
-        if (!publicKey || !wallet) {
+        if (!program.provider.publicKey) {
             throw new WalletNotConnectedError();
         }
 
@@ -21,21 +22,33 @@ export default function Collectables() {
             throw new Error('No location');
         }
 
-        const nfts = await getNFTs(connection, publicKey);
-        console.log(nfts);
-        const account = await createGeocache(connection, wallet);
-        const geocache = await setGeocacheLocation(connection, wallet, account, location);
+        const accounts = await getParsedTokenAccountsByOwner(program);
+        console.log(accounts);
+
+        if (accounts.length === 0) {
+            enqueueSnackbar('No accounts', { variant: 'error' });
+        }
+
+        // const metadata = await getMetadataByTokenAccounts(accounts);
+        // console.log(metadata);
+        const geocache = await createGeocache(
+            program,
+            accounts[0].pubkey,
+            (accounts[0].account.data as ParsedAccountData).parsed.info.mint,
+            location
+        );
+        // const geocache = await setGeocacheLocation(connection, wallet, account, location);
         console.log(geocache);
-    }, [publicKey, connection, wallet, location]);
+    }, [program, location, enqueueSnackbar]);
 
     return (
         <>
-            { !location ? (
+            {!location ? (
                 <div>
                     <p>Loading location...</p>
                 </div>
             ) : (
-                <button onClick={onClick} disabled={!publicKey}>
+                <button onClick={onClick} disabled={!program.provider.publicKey}>
                     Create Geocache!
                 </button>
             )}

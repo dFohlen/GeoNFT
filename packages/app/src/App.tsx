@@ -18,6 +18,7 @@ import { useSnackbar } from 'notistack';
 import { BrowserRouter as BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import Navbar from './components/Navbar';
+import Geocaches from './components/Geocaches';
 import Collectables from './components/Collectables';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
@@ -88,11 +89,14 @@ const Content: FC = () => {
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
                 <BrowserRouter>
                     <Routes>
-                        { !publicKey ? (
+                        {!publicKey ? (
                             <Route path="/" element={<WalletMultiButton />} />
                         ) : (
-                            <Route path="/" element={<Collectables />} />
+                            <Route path="/" element={<Geocaches />} />
                         )}
+                        <Route path="/" element={<WalletMultiButton />} />
+                        <Route path="/map" element={<Geocaches />} />
+                        <Route path="/collectables" element={<Collectables />} />
                     </Routes>
                     <Navbar />
                 </BrowserRouter>

@@ -17,7 +17,7 @@ export default function Navbar() {
                     value={value}
                     onChange={(event, newValue: string) => {
                         setValue(newValue);
-                        // navigate(newValue);
+                        navigate(newValue);
                     }}
                 >
                     <BottomNavigationAction label="Collectables" value="collectables" icon={<AccountBalanceWallet />} />
