@@ -5,7 +5,10 @@
   "scripts": {
     "build": "anchor build",
     "test": "anchor test",
+    "deploy:local": "anchor deploy --provider.cluster localnet",
+    "deploy:test": "anchor deploy --provider.cluster testnet",
     "deploy:dev": "anchor deploy --provider.cluster devnet",
+    "deploy:prod": "anchor deploy --provider.cluster mainnet",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
