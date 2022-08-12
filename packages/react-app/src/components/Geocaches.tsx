@@ -3,8 +3,11 @@ import { useAnchor } from '../hooks/useAnchor';
 import { getGeocaches } from '../api/getGeocaches';
 import { ProgramAccount } from '@project-serum/anchor';
 import GeocachesList from './GeocachesList';
+import { useNavigate } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export default function Geocaches() {
+
     const program = useAnchor();
     // const [geocaches, setGeocaches] = useState<
     //     {

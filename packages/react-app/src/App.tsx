@@ -1,5 +1,6 @@
+import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
+import { ConnectionProvider, WalletProvider, useWallet, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {
     CoinbaseWalletAdapter,
@@ -12,14 +13,10 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { Theme } from './Theme';
 import { useSnackbar } from 'notistack';
-import { BrowserRouter as BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box } from '@material-ui/core';
 import Navbar from './components/Navbar';
-import Geocaches from './components/Geocaches';
-import Collectables from './components/Collectables';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -82,24 +79,14 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
 };
 
 const Content: FC = () => {
-    const { publicKey } = useWallet();
+    const wallet = useWallet();
+    const anchorWallet = useAnchorWallet();
 
     return (
         <>
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
-                <BrowserRouter>
-                    <Routes>
-                        {!publicKey ? (
-                            <Route path="/" element={<WalletMultiButton />} />
-                        ) : (
-                            <Route path="/" element={<Geocaches />} />
-                        )}
-                        <Route path="/" element={<WalletMultiButton />} />
-                        <Route path="/map" element={<Geocaches />} />
-                        <Route path="/collectables" element={<Collectables />} />
-                    </Routes>
-                    <Navbar />
-                </BrowserRouter>
+                {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && <WalletMultiButton />}
+                <Navbar />
             </Box>
         </>
     );
