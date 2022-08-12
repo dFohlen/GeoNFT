@@ -15,10 +15,8 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import {
-  PublicKey,
   SystemProgram,
   Transaction,
-  LAMPORTS_PER_SOL,
   SYSVAR_RENT_PUBKEY,
 } from "@solana/web3.js";
 import { NftGeocaching } from "../target/types/nft_geocaching";
@@ -246,23 +244,26 @@ describe("nft-geocaching", () => {
     console.log("Vault PDA: " + vaultAddress.toString());
     console.log("Vault bump: " + vaultBump.toString());
 
-    const tx = await program.methods
-      .getGeocache(vaultBump)
-      .accounts({
-        geocache: geocacheAccount.publicKey,
-        tokenAccount: vaultAddress,
-        seekerTokenAccount: seeker2TokenAccount,
-        seeker: seeker2.publicKey,
-        mint: mint,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        rent: SYSVAR_RENT_PUBKEY,
-      })
-      .signers([seeker2])
-      .rpc();
-    console.log("Transaction signature", tx);
-
-    // Should throw an error
+    try {
+      const tx = await program.methods
+        .getGeocache(vaultBump)
+        .accounts({
+          geocache: geocacheAccount.publicKey,
+          tokenAccount: vaultAddress,
+          seekerTokenAccount: seeker2TokenAccount,
+          seeker: seeker2.publicKey,
+          mint: mint,
+          systemProgram: anchor.web3.SystemProgram.programId,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          rent: SYSVAR_RENT_PUBKEY,
+        })
+        .signers([seeker2])
+        .rpc();
+      console.log("Transaction signature", tx);
+    } catch (e: any) {
+      console.log("Error: " + e.message);
+      expect(e.message).to.contain("The geocache is not active.");
+    }
   });
 
   it("Create second Geocache", async () => {
