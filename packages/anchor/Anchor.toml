@@ -1,8 +1,12 @@
 [features]
 seeds = false
 skip-lint = false
+
 [programs.localnet]
 nft_geocaching = "6F3RNrQC7ko1bDhX142J1cKrivYWwu1oE3iNEotHwUUT"
+
+[programs.devnet]
+nft_geocaching = "8KAcsMaMo8M7Z9DAhskvocUBnS61Y6pojwPwcbCE5FgL"
 
 [registry]
 url = "https://api.apr.dev"
