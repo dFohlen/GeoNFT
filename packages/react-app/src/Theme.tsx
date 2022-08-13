@@ -1,4 +1,4 @@
-import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material';
+import { createTheme, CssBaseline, StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
 import { SnackbarProvider } from 'notistack';
 import React, { FC, ReactNode } from 'react';
@@ -39,7 +39,9 @@ export const Theme: FC<{ children: ReactNode }> = ({ children }) => {
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-                <SnackbarProvider>{children}</SnackbarProvider>
+                <CssBaseline>
+                    <SnackbarProvider>{children}</SnackbarProvider>
+                </CssBaseline>
             </ThemeProvider>
         </StyledEngineProvider>
     );
