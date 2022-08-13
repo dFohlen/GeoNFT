@@ -8,7 +8,7 @@ import { ProgramAccount } from '@project-serum/anchor';
 import { Box } from '@mui/material';
 
 interface GeocachesProps {
-    geocaches: ProgramAccount[];
+    geocaches: any[];
 }
 
 const GeocachesList = (props: GeocachesProps) => {
@@ -17,14 +17,21 @@ const GeocachesList = (props: GeocachesProps) => {
     return (
         <Box m={2}>
             <List dense={true}>
-                {props.geocaches.map((geocache) => (
+                {props.geocaches.map((geocache: any) => (
                     <ListItem
                         key={geocache.publicKey.toString()}
                         button
                         component={Link}
                         href={`http://maps.google.com/maps?q=${geocache.account.location}`}
                     >
-                        <ListItemText primary={geocache.account.location} />
+                        <ListItemText
+                            primary={geocache.account.location}
+                            secondary={
+                                geocache.distance < 1
+                                    ? `${(geocache.distance * 100).toFixed(2)} m`
+                                    : `${geocache.distance.toFixed(2)} km`
+                            }
+                        />
                     </ListItem>
                 ))}
             </List>

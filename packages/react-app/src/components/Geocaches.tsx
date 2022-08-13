@@ -3,27 +3,35 @@ import { useAnchor } from '../hooks/useAnchor';
 import { getGeocaches } from '../api/getGeocaches';
 import { ProgramAccount } from '@project-serum/anchor';
 import GeocachesList from './GeocachesList';
-import { useNavigate } from 'react-router-dom';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
+import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
 
 export default function Geocaches() {
-
+    const location = useGeolocationPosition();
     const program = useAnchor();
-    // const [geocaches, setGeocaches] = useState<
-    //     {
-    //         pubkey: PublicKey;
-    //         account: AccountInfo<Buffer | ParsedAccountData>;
-    //     }[]
-    // >();
-    const [geocaches, setGeocaches] = useState<ProgramAccount[]>();
+    const [geocaches, setGeocaches] = useState<ProgramAccount<NftGeocaching>[]>();
 
     useEffect(() => {
         // declare the data fetching function
-        if (!geocaches) {
+        if (!geocaches && location) {
             const fetchData = async () => {
-                const geocaches = await getGeocaches(program);
-                console.log(geocaches);
-                setGeocaches(geocaches);
+                const rawGeocaches = await getGeocaches(program);
+                console.log(rawGeocaches);
+                const geocachesWithDistance = rawGeocaches
+                    .map((geocache: any) => {
+                        const coordinates = geocache.account.location.split(',');
+                        return {
+                            ...geocache,
+                            distance: distanceInKmBetweenEarthCoordinates(
+                                location.coords.latitude,
+                                location.coords.longitude,
+                                coordinates[0],
+                                coordinates[1]
+                            ),
+                        };
+                    })
+                    .sort((a: any, b: any) => a.distance - b.distance);
+                setGeocaches(geocachesWithDistance);
             };
 
             // call the function
@@ -31,7 +39,7 @@ export default function Geocaches() {
                 // make sure to catch any error
                 .catch(console.error);
         }
-    }, [program, geocaches]);
+    }, [location, program, geocaches]);
 
     return (
         <>
