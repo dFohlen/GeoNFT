@@ -15,7 +15,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
-declare_id!("6F3RNrQC7ko1bDhX142J1cKrivYWwu1oE3iNEotHwUUT");
+declare_id!("8KAcsMaMo8M7Z9DAhskvocUBnS61Y6pojwPwcbCE5FgL");
 
 #[program]
 pub mod nft_geocaching {
