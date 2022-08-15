@@ -102,7 +102,9 @@ WIP
 WIP
 
 
-## Project structure
+## 🏗️ Getting started
+
+### Project structure
 
 In the project structure, you will see the following files and folders.
 
@@ -114,8 +116,6 @@ In the project structure, you will see the following files and folders.
   * react-app — This is where the web-frontend is going to be built
   * react-native-app - This is where the mobile-frontend is going to be built
 
-## 🏗️ How to build/run
-
 ### Preparations
 
 #### Rust
@@ -123,6 +123,8 @@ Go [here](https://www.rust-lang.org/tools/install) to install Rust.
 
 #### Solana
 Go [here](https://docs.solana.com/cli/install-solana-cli-tools) to install Solana and then run `solana-keygen new` to create a keypair at the default location. Anchor uses this keypair to run your program tests.
+
+Switch to the Solana Devnet by running `solana config set devnet` and fund this wallet with `solana airdrop 2` or on https://solfaucet.com/.
 
 #### Yarn
 Go [here](https://yarnpkg.com/getting-started/install) to install Yarn.
@@ -158,7 +160,7 @@ Verify the installation.
 anchor --version
 ```
 
-### Getting started
+### How to build/run
 
 1. Run `yarn install` to install related dependencies.
 2. Go to the packages/anchor folder and run `anchor build` to build the Smart Contract.
