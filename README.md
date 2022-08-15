@@ -1,8 +1,46 @@
+[contributors-shield]: https://img.shields.io/github/contributors/dFohlen/nft-geocaching.svg?style=for-the-badge
+[contributors-url]: https://github.com/dFohlen/nft-geocaching/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/dFohlen/nft-geocaching.svg?style=for-the-badge
+[forks-url]: https://github.com/dFohlen/nft-geocaching/network/members
+[stars-shield]: https://img.shields.io/github/stars/dFohlen/nft-geocaching.svg?style=for-the-badge
+[stars-url]: https://github.com/dFohlen/nft-geocaching/stargazers
+[issues-shield]: https://img.shields.io/github/issues/dFohlen/nft-geocaching.svg?style=for-the-badge
+[issues-url]: https://github.com/dFohlen/nft-geocaching/issues
+[license-shield]: https://img.shields.io/github/license/dFohlen/nft-geocaching.svg?style=for-the-badge
+[license-url]: https://github.com/dFohlen/nft-geocaching/blob/master/LICENSE.txt
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/volker-dufner
+
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
+
+<br />
+<div align="center">
+  <a href="https://solana.com/summercamp">
+    <img src="https://solana.com/_next/static/media/logo.aadda478.svg" alt="Logo" width="500">
+  </a>
+
+<h3 align="center"><a href="https://explorer.solana.com/?cluster=devnet">Solana Devent</a></h3>
+  <p align="center">
+    A decentralized NFT geocaching application
+    <br />
+    <a href="https://www.youtube.com/channel/UCylMUqkb21OVtQnIQHGtjuw">View Demo</a>
+    ·
+    <a href="https://github.com/dFohlen/nft-geocaching/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/dFohlen/nft-geocaching/issues">Request Feature</a>
+  </p>
+</div>
+
 # NFT-Geocaching
 
 ## ℹ️ General Info
 
-This project is/was designed and implemented by [Volker Dufner](https://github.com/dFohlen) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
+This project is designed and implemented by [Volker Dufner](https://github.com/dFohlen) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
 
 ## 🗺️ What is Geocaching?
 
@@ -24,6 +62,31 @@ Happy hunting!
 2. The NFT and the location coordinates are then sent from the holders wallet to our smart contract. The coordinates are additionally encrypted to prevent misuse or theft of the NFTs.
 3. Searchers can now use the app to see where the nearest NFTs are and make their way there.
 4. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
+
+
+## 🤕 Problems we run into
+First of all, we had the major challenge in general of never having worked with Solana, Rust or React-Native before. But of course we embraced that and started by researching the best practices for creating and deploying smart contracts on Solana. We quickly came across Anchor and familiarized ourselves with its Anchor book and the basics of Solana Contracts.
+
+### Transfer any NFT to our contract and back
+It seems trivial at first, but after we had finished the basic contract for setting a geolocation of the geocache, we asked ourselves how we can transfer the associated NFT to the contract. Here the examples were significantly fewer. At some point we found a solution called PDAs (Program Derived Addresses (PDAs).
+
+### Minting own NFTs
+WIP
+
+### Limitation of the new mobile wallet adapter
+After the contract was deployed, we wanted to start with the app. Here we quickly encountered limitations caused by the new mobile wallet adapter. Among other things, only Android and not iOS is currently supported, and you also need a fake wallet (also only Android) to sign transactions. There are also no examples of how to use an anchor contract with it. When asked by the developers, it quickly became clear that everything is still very much under development. So ater some tests, we decided to implement a React app as a PWA for mobile devices.
+  
+### Wallet connect on PWA
+WIP
+
+
+### Geolocation on the Phantom Wallet Browser
+WIP
+
+
+### Switch back to React-Native
+WIP
+
 
 ## 🧑‍💻 Technologies
 
