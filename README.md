@@ -80,7 +80,7 @@ After the contract was deployed, we wanted to start with the app. Here we quickl
 We started the implementation and everything worked at the browser level without any major incidents. But when we tested the app on a smartphone, we could not link a wallet, even though the Phantom app was also installed. After a Github search, we found out that the [deep links](https://phantom.app/blog/introducing-phantom-deeplinks) to the wallet are not yet supported by the Solana wallet adapter and would therefore only work in the in-app Phantom browser. Of course we tested this and ended up with the SSL requirement. We have also built a solution for this, but then we came to the next problem.
 
 ### Geolocation on the Phantom Wallet Browser
-WIP
+After we linked the wallet and tried to create a new geocache, we could not determine the current geolocation of the smartphone. This is because Phatom's internal browser does not support this feature. So we were faced with the decision to create a web-only application, which is of course very impractical for geocaching, or to switch back to the React-Native version.
 
 ### Switch back to React-Native
 WIP
@@ -161,9 +161,9 @@ anchor --version
 ### Getting started
 
 1. Run `yarn install` to install related dependencies.
-2. Goto the packages/anchor folder and run `anchor build` to build the Smart Contract.
+2. Go to the packages/anchor folder and run `anchor build` to build the Smart Contract.
 3. Run `anchor deploy:<network>` to deploy the Smart Contract to the Solana blockchain.
-4. Goto the packages/react-app folder and run `yarn start` to start the development server which will serve the app on http://localhost:3000
+4. Go to the packages/react-app folder and run `yarn start` to start the development server which will serve the app on http://localhost:3000
 
 ---
 
