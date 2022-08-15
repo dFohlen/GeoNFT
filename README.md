@@ -102,7 +102,9 @@ WIP
 WIP
 
 
-## Project structure
+## 🏗️ Getting started
+
+### Project structure
 
 In the project structure, you will see the following files and folders.
 
@@ -113,8 +115,6 @@ In the project structure, you will see the following files and folders.
     * migrations — This is the deploy script
   * react-app — This is where the web-frontend is going to be built
   * react-native-app - This is where the mobile-frontend is going to be built
-
-## 🏗️ How to build/run
 
 ### Preparations
 
@@ -160,7 +160,7 @@ Verify the installation.
 anchor --version
 ```
 
-### Getting started
+### How to build/run
 
 1. Run `yarn install` to install related dependencies.
 2. Go to the packages/anchor folder and run `anchor build` to build the Smart Contract.
