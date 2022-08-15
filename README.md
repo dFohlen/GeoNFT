@@ -124,6 +124,8 @@ Go [here](https://www.rust-lang.org/tools/install) to install Rust.
 #### Solana
 Go [here](https://docs.solana.com/cli/install-solana-cli-tools) to install Solana and then run `solana-keygen new` to create a keypair at the default location. Anchor uses this keypair to run your program tests.
 
+Switch to the Solana Devnet by running `solana config set devnet` and fund this wallet with `solana airdrop 2` or on https://solfaucet.com/.
+
 #### Yarn
 Go [here](https://yarnpkg.com/getting-started/install) to install Yarn.
 
