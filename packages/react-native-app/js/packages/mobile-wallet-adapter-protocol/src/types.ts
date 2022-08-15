@@ -1,3 +1,8 @@
+export type Account = Readonly<{
+    address: Base64EncodedAddress;
+    label?: string;
+}>;
+
 /**
  * Properties that wallets may present to users when an app
  * asks for authorization to execute privileged methods (see
@@ -22,7 +27,7 @@ export type AssociationKeypair = CryptoKeyPair;
  * use it later to invoke privileged methods.
  */
 export type AuthorizationResult = Readonly<{
-    addresses: Base64EncodedAddress[];
+    accounts: Account[];
     auth_token: AuthToken;
     wallet_uri_base: string;
 }>;
@@ -74,9 +79,10 @@ export interface SignTransactionsAPI {
 }
 export interface SignAndSendTransactionsAPI {
     signAndSendTransactions(params: {
-        commitment: Finality;
+        options?: Readonly<{
+            min_context_slot?: number;
+        }>;
         payloads: Base64EncodedTransaction[];
-        preflight_commitment: Finality;
     }): Promise<Readonly<{ signatures: Base64EncodedSignature[] }>>;
 }
 
