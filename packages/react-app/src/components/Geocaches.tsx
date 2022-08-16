@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useAnchor } from '../hooks/useAnchor';
 import { getGeocaches } from '../api/getGeocaches';
 import { ProgramAccount } from '@project-serum/anchor';
-import GeocachesList from './GeocachesList';
+import { GeocachesList } from './GeocachesList';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import { GoogleMap } from './GoogleMap';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 export default function Geocaches() {
     const location = useGeolocationPosition();
@@ -50,8 +49,7 @@ export default function Geocaches() {
             ) : geocaches.length === 0 ? (
                 <Typography>No geocaches</Typography>
             ) : (
-                // <GeocachesList geocaches={geocaches}></GeocachesList>
-                <GoogleMap geocaches={geocaches}></GoogleMap>
+                <GeocachesList geocaches={geocaches}></GeocachesList>
             )}
         </>
     );

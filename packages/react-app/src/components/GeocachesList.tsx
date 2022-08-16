@@ -2,16 +2,14 @@ import * as React from 'react';
 import Link from '@material-ui/core/Link';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
-import { ProgramAccount } from '@project-serum/anchor';
 import { Box } from '@mui/material';
 
 interface GeocachesProps {
     geocaches: any[];
 }
 
-const GeocachesList = (props: GeocachesProps) => {
+export const GeocachesList = (props: GeocachesProps) => {
     console.log(props);
 
     return (
@@ -38,5 +36,3 @@ const GeocachesList = (props: GeocachesProps) => {
         </Box>
     );
 };
-
-export default React.memo(GeocachesList);
