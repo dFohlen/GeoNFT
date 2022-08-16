@@ -40,7 +40,7 @@
 
 ## ℹ️ General Info
 
-This project is designed and implemented by [Volker Dufner](https://github.com/dFohlen) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
+This project is designed and implemented by [Volker Dufner](https://github.com/dFohlen) and [Tim Schmitz](https://github.com/tim565) as part of the [Solana Summer Hackathon](https://solana.com/summercamp).
 
 ## 🗺️ What is Geocaching?
 
