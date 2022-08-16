@@ -23,6 +23,7 @@ pub mod nft_geocaching {
     pub fn create_geocache(ctx: Context<CreateGeocache>, _bump: u8, location: String) -> Result<()> {
         let geocache = &mut ctx.accounts.geocache;
         geocache.owner = ctx.accounts.hider.key();
+        geocache.mint = ctx.accounts.mint.key();
         geocache.location = location;
 
         anchor_spl::token::transfer(
@@ -81,6 +82,8 @@ pub mod nft_geocaching {
 pub struct Geocache {
     owner: Pubkey,
     // Owner of the geocache
+    mint: Pubkey,
+    // Owner of the geocache
     location: String,
     // Location of the geocache
     active: u8,
@@ -98,6 +101,7 @@ pub struct CreateGeocache<'info> {
     payer = hider,
     space = 8 // all accounts need 8 bytes for the account discriminator prepended to the account
     + 32 // owner: Pubkey needs 32 bytes
+    + 32 // mint: Pubkey needs 32 bytes
     + 32 // location: 32 bytes
     + 1 // active: 1 byte
     )]
