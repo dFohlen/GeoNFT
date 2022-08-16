@@ -37,6 +37,7 @@
 </div>
 
 # GeoNFT
+<img src="https://user-images.githubusercontent.com/28490587/184869199-e7e38ec0-6954-424d-9874-9a09c5b55459.svg" width="250">
 
 ## ℹ️ General Info
 
