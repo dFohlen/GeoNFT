@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import Grid from '@mui/material/Grid';
-import { Box, Typography } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -44,41 +43,42 @@ export default function Collectables() {
         }
 
         nfts?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey).forEach(async (nft: any) => {
+            console.log('Create: ', chosenPubkey);
             const geocache = await createGeocache(
                 program,
                 nft.pubkey,
                 (nft.account.data as ParsedAccountData).parsed.info.mint,
                 location
             );
-            console.log('Create: ', chosenPubkey);
+            enqueueSnackbar('Geocache created', { variant: 'success' });
         });
     };
 
     return (
         <>
-           {!nfts ? (
-                <Typography>Loading NFTs...</Typography>
-            ) : nfts.length === 0 ? (
-                <Typography>No NFTs found</Typography>
-            ) : (
-                <div>
-                <Box m={2}>
-                    <p>Choose a NFT to create a Geocache</p>
-                    <List dense={true} sx={{ width: '100%', maxWidth: 360 }}>
-                        {nfts.map((item: any) => (
-                            <ListItemButton
-                                key={item.pubkey}
-                                divider={true}
-                                onClick={() => newGeocache(item.pubkey.toString())}
-                            >
-                                <img src={'path'} alt={'nft'} />
-                                <ListItemText primary={item.pubkey.toString()} />
-                            </ListItemButton>
-                        ))}
-                    </List>
-                </Box>
-            </div>
-            )}
+            <Grid item xs={12}>
+                {!nfts ? (
+                    <Typography>Loading NFTs...</Typography>
+                ) : nfts.length === 0 ? (
+                    <Typography>No NFTs found</Typography>
+                ) : (
+                    <>
+                        <Typography>Choose a NFT to create a</Typography>
+                        <List dense={true} sx={{ width: '100%', maxWidth: 360 }}>
+                            {nfts.map((item: any) => (
+                                <ListItemButton
+                                    key={item.pubkey}
+                                    divider={true}
+                                    onClick={() => newGeocache(item.pubkey.toString())}
+                                >
+                                    <img src={'path'} alt={'nft'} />
+                                    <ListItemText primary={item.pubkey.toString()} />
+                                </ListItemButton>
+                            ))}
+                        </List>
+                    </>
+                )}
+            </Grid>
         </>
     );
 }
