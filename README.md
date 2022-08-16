@@ -1,13 +1,13 @@
-[contributors-shield]: https://img.shields.io/github/contributors/dFohlen/nft-geocaching.svg?style=for-the-badge
-[contributors-url]: https://github.com/dFohlen/nft-geocaching/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/dFohlen/nft-geocaching.svg?style=for-the-badge
-[forks-url]: https://github.com/dFohlen/nft-geocaching/network/members
-[stars-shield]: https://img.shields.io/github/stars/dFohlen/nft-geocaching.svg?style=for-the-badge
-[stars-url]: https://github.com/dFohlen/nft-geocaching/stargazers
-[issues-shield]: https://img.shields.io/github/issues/dFohlen/nft-geocaching.svg?style=for-the-badge
-[issues-url]: https://github.com/dFohlen/nft-geocaching/issues
-[license-shield]: https://img.shields.io/github/license/dFohlen/nft-geocaching.svg?style=for-the-badge
-[license-url]: https://github.com/dFohlen/nft-geocaching/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/dFohlen/GeoNFT.svg?style=for-the-badge
+[contributors-url]: https://github.com/dFohlen/GeoNFT/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/dFohlen/GeoNFT.svg?style=for-the-badge
+[forks-url]: https://github.com/dFohlen/GeoNFT/network/members
+[stars-shield]: https://img.shields.io/github/stars/dFohlen/GeoNFT.svg?style=for-the-badge
+[stars-url]: https://github.com/dFohlen/GeoNFT/stargazers
+[issues-shield]: https://img.shields.io/github/issues/dFohlen/GeoNFT.svg?style=for-the-badge
+[issues-url]: https://github.com/dFohlen/GeoNFT/issues
+[license-shield]: https://img.shields.io/github/license/dFohlen/GeoNFT.svg?style=for-the-badge
+[license-url]: https://github.com/dFohlen/GeoNFT/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/volker-dufner
 
@@ -30,13 +30,13 @@
     <br />
     <a href="https://www.youtube.com/channel/UCylMUqkb21OVtQnIQHGtjuw">View Demo</a>
     ·
-    <a href="https://github.com/dFohlen/nft-geocaching/issues">Report Bug</a>
+    <a href="https://github.com/dFohlen/GeoNFT/issues">Report Bug</a>
     ·
-    <a href="https://github.com/dFohlen/nft-geocaching/issues">Request Feature</a>
+    <a href="https://github.com/dFohlen/GeoNFT/issues">Request Feature</a>
   </p>
 </div>
 
-# NFT-Geocaching
+# GeoNFT
 
 ## ℹ️ General Info
 
