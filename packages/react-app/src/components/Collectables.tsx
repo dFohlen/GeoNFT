@@ -1,18 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import Link from '@material-ui/core/Link';
+
+import Grid from '@mui/material/Grid';
+import { Box } from '@mui/material';
+
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
-import { ProgramAccount } from '@project-serum/anchor';
 import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
 import { createGeocache } from '../api/createGeocache';
 import { useGeolocationPosition } from '../hooks/useGeolocationPosition';
 import { ParsedAccountData } from '@solana/web3.js';
 import { useAnchor } from '../hooks/useAnchor';
 import { useSnackbar } from 'notistack';
-import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
 
 export default function Collectables() {
     const { enqueueSnackbar } = useSnackbar();
@@ -24,18 +28,13 @@ export default function Collectables() {
         if (!nfts && location) {
             const fetchData = async () => {
                 const accounts = await getParsedTokenAccountsByOwner(program);
-                console.log("rawNFTS:");
-                console.log(accounts);
 
                 const preparedNFTs = accounts.map((nft: any) => {
-                    console.log("NFT:");
-                    console.log(nft);
                     return(
                         nft
                     );
                 })
-                console.log("PreparedNFTs:");
-                console.log(preparedNFTs);
+                console.log("Found NFTs: " + preparedNFTs);
                 setNfts(preparedNFTs);
             };
 
@@ -84,23 +83,29 @@ export default function Collectables() {
                 </div>
             ) : !nfts || nfts.length === 0 ? (
                 <div>
-                    <p>No NFTs</p>
+                    <p>No NFTs found</p>
                 </div>
             ) : (
                 <div>
-                    <p>Choose a NFT to create a Geocache</p>
-                    <List dense={true}>
-                        {nfts.map((item: any) => (
-                            <ListItem
-                                key={item.pubkey}
-                                button
-                            >
-                                <ListItemText
-                                    primary={"test"}
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
+                    <Box m={2}>
+                        <p>Choose a NFT to create a Geocache</p>
+                        <List dense={true} sx={{ width: '100%', maxWidth: 360 }}>
+                            {nfts.map((item: any) => (
+                                <ListItemButton
+                                    key={item.pubkey}
+                                    divider={true}
+                                >
+                                    <ListItemAvatar>
+                                        <Avatar
+                                            alt={'NFT'}
+                                            src={'/path'}
+                                        />
+                                    </ListItemAvatar>
+                                    <ListItemText primary={item.pubkey.toString()}/>
+                                </ListItemButton>
+                            ))}
+                        </List>
+                    </Box>
                 </div>
             )}
         </>
