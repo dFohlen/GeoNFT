@@ -2,12 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
-
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
 import { createGeocache } from '../api/createGeocache';
