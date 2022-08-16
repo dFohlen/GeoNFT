@@ -7,8 +7,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
 
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
@@ -28,14 +26,7 @@ export default function Collectables() {
         if (!nfts && location) {
             const fetchData = async () => {
                 const accounts = await getParsedTokenAccountsByOwner(program);
-
-                const preparedNFTs = accounts.map((nft: any) => {
-                    return(
-                        nft
-                    );
-                })
-                console.log("Found NFTs: " + preparedNFTs);
-                setNfts(preparedNFTs);
+                setNfts(accounts);
             };
 
             // call the function
@@ -45,8 +36,7 @@ export default function Collectables() {
         }
     }, [location, program, nfts]);
 
-/*
-    const onClick = useCallback(async () => {
+    const newGeocache = async (chosenPubkey: any) => {
         if (!program.provider.publicKey) {
             throw new WalletNotConnectedError();
         }
@@ -62,18 +52,22 @@ export default function Collectables() {
             enqueueSnackbar('No accounts', { variant: 'error' });
         }
 
-        // const metadata = await getMetadataByTokenAccounts(accounts);
-        // console.log(metadata);
-        const geocache = await createGeocache(
-            program,
-            accounts[0].pubkey,
-            (accounts[0].account.data as ParsedAccountData).parsed.info.mint,
-            location
-        );
-        // const geocache = await setGeocacheLocation(connection, wallet, account, location);
-        console.log(geocache);
-    }, [program, location, enqueueSnackbar]);
-    */
+        for (let i=0; i<accounts.length; i++) {
+            if (chosenPubkey == accounts[i].pubkey.toString()) {
+                // const metadata = await getMetadataByTokenAccounts(accounts);
+                // console.log(metadata);
+                // const geocache = await setGeocacheLocation(connection, wallet, account, location);
+
+                const geocache = await createGeocache(
+                    program,
+                    accounts[i].pubkey,
+                    (accounts[0].account.data as ParsedAccountData).parsed.info.mint,
+                    location
+                );
+                console.log('Create: ', chosenPubkey);
+            }
+        }
+    }
 
     return (
         <>
@@ -94,13 +88,12 @@ export default function Collectables() {
                                 <ListItemButton
                                     key={item.pubkey}
                                     divider={true}
+                                    onClick={() => newGeocache(item.pubkey.toString())}
                                 >
-                                    <ListItemAvatar>
-                                        <Avatar
-                                            alt={'NFT'}
-                                            src={'/path'}
-                                        />
-                                    </ListItemAvatar>
+                                    <img
+                                        src={"path"}
+                                        alt={"nft"}
+                                    />
                                     <ListItemText primary={item.pubkey.toString()}/>
                                 </ListItemButton>
                             ))}
