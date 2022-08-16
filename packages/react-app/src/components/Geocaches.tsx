@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAnchor } from '../hooks/useAnchor';
-import { getGeocaches } from '../api/getGeocaches';
+import { listGeocaches } from '../api/listGeocaches';
 import { ProgramAccount } from '@project-serum/anchor';
 import { GeocachesList } from './GeocachesList';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
@@ -16,8 +16,7 @@ export default function Geocaches() {
         // declare the data fetching function
         if (!geocaches && location) {
             const fetchData = async () => {
-                const rawGeocaches = await getGeocaches(program);
-                console.log(rawGeocaches);
+                const rawGeocaches = await listGeocaches(program);
                 const geocachesWithDistance = rawGeocaches
                     .map((geocache: any) => {
                         const coordinates = geocache.account.location.split(',');
