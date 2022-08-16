@@ -72,7 +72,7 @@ First of all, we had the major challenge in general of never having worked with 
 It seems trivial at first, but after we had finished the basic contract for setting a geolocation of the geocache, we asked ourselves how we can transfer the associated NFT to the contract. Here the examples were significantly fewer. At some point we found a solution called Program Derived Addresses (PDAs).
 
 ### Minting own NFTs
-WIP
+The NFTs in the Smart Contract can be taken by everyone who claims to have the coordinates that the NFT was stored on. In practice hackers could call the functions without playing along the rules and steal the NFTs. To solve the problem we plan to put a key into out application that is stored on-chain as hash to make sure only users of the application can extract NFTs.
 
 ### Limitation of the new mobile wallet adapter
 After the contract was deployed, we wanted to start with the app. Here we quickly encountered limitations caused by the new mobile wallet adapter. Among other things, only Android and not iOS is currently supported, and you also need a fake wallet (also only Android) to sign transactions. There are also no examples of how to use an anchor contract with it. When we asked the developers, we were told that everything is still under development. So after some tests, we decided to implement a React app as a Progressive Web App (PWA) for mobile devices.
@@ -84,23 +84,22 @@ We started the implementation and everything worked at the browser level without
 After we linked the wallet and tried to create a new geocache, we could not determine the current geolocation of the smartphone. This is because Phatom's internal browser does not support this feature. So we were faced with the decision to create a web-only application, which is of course very impractical for geocaching, or to switch back to the React-Native version.
 
 ### Switch back to React-Native
-WIP
+Currently, the mobile wallet adapter has still limited functionality, using our app in Google Chrome with a wallet extension offers the best user experience.
+In the future, we plan to switch back to React-Native to make the game playable on mobile devices. A Solana wallet integration, a GPS functionality and a integration of a map such as Google Maps is needed for a proper integration of our app on mobile devices.
 
 
 ## 🧑‍💻 Technologies
 
 
 ### Solana-Blockchain
-
-WIP
+The Solana-Blockchain is one of the most famous Smart Contract platforms with a fast growing user base. As a leading ledger to create and trade NFTs, Solana can be seen as a large competition to Ethereum.
 
 ### Smart Contract
-
-WIP
+Smart Contracts on Solana are called 'programs' and they are usually written in the Rust programming language.
 
 ### Mobile App
-
-WIP
+Solana announced to develop Saga, an Android phone with special features to integrate cryptocurrencies and decentralized apps in a mobile device. Aditionally, there is a SDK to integrate Solana on classical Android applications.
+Unfortunately, our game is currently only available as a web application because of the ongoing development of the mobile wallet adapter SDK.
 
 
 ## 🏗️ Getting started

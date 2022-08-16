@@ -8,6 +8,8 @@
     "dependencies": {
         "@emotion/react": "^11.9.3",
         "@emotion/styled": "^11.9.3",
+        "@googlemaps/react-wrapper": "^1.1.35",
+        "@googlemaps/typescript-guards": "^2.0.1",
         "@material-ui/core": "^4.12.4",
         "@metaplex-foundation/mpl-token-metadata": "^2.2.3",
         "@mui/icons-material": "^5.8.4",
