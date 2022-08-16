@@ -13,12 +13,10 @@ import { ParsedAccountData } from '@solana/web3.js';
 import { useAnchor } from '../hooks/useAnchor';
 import { useSnackbar } from 'notistack';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import NFTsList from './NFTsList'
 
 export default function Collectables() {
     const { enqueueSnackbar } = useSnackbar();
-    //const [nfts, setNfts] = useState<ParsedAccountData[]>();
-    const [nfts, setNfts] = useState<ProgramAccount<NftGeocaching>[]>();
+    const [nfts, setNfts] = useState<any[]>();
     const program = useAnchor();
     const location = useGeolocationPosition();
 
@@ -28,12 +26,16 @@ export default function Collectables() {
                 const accounts = await getParsedTokenAccountsByOwner(program);
                 console.log("rawNFTS:");
                 console.log(accounts);
-                const preparedNFTs = accounts
-                    .map((nft: any) => {
-                        return {
-                            nft
-                        };
-                    });
+
+                const preparedNFTs = accounts.map((nft: any) => {
+                    console.log("NFT:");
+                    console.log(nft);
+                    return(
+                        nft
+                    );
+                })
+                console.log("PreparedNFTs:");
+                console.log(preparedNFTs);
                 setNfts(preparedNFTs);
             };
 
@@ -80,10 +82,25 @@ export default function Collectables() {
                 <div>
                     <p>Loading location...</p>
                 </div>
+            ) : !nfts || nfts.length === 0 ? (
+                <div>
+                    <p>No NFTs</p>
+                </div>
             ) : (
                 <div>
                     <p>Choose a NFT to create a Geocache</p>
-                    <NFTsList nfts={nfts}></NFTsList>
+                    <List dense={true}>
+                        {nfts.map((item: any) => (
+                            <ListItem
+                                key={item.pubkey}
+                                button
+                            >
+                                <ListItemText
+                                    primary={"test"}
+                                />
+                            </ListItem>
+                        ))}
+                    </List>
                 </div>
             )}
         </>
