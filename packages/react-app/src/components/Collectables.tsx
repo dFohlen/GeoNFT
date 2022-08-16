@@ -64,6 +64,7 @@ export default function Collectables() {
 
         // const metadata = await getMetadataByTokenAccounts(accounts);
         // console.log(metadata);
+
         const geocache = await createGeocache(
             program,
             accounts[0].pubkey,
