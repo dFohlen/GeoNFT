@@ -17,6 +17,7 @@ import { Theme } from './Theme';
 import { useSnackbar } from 'notistack';
 import { Box } from '@material-ui/core';
 import Navbar from './components/Navbar';
+import { GoogleMap } from './components/GoogleMap';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -84,8 +85,21 @@ const Content: FC = () => {
 
     return (
         <>
-            <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
-                {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && <WalletMultiButton />}
+            {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && (
+                <Box alignItems="center" justifyContent="center" minHeight="100vh">
+                    <WalletMultiButton />
+                </Box>
+            )}
+            {/* {!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey ? (
+                <Box display="flex" alignItems="center" justifyContent="center" minHeight="100vh">
+                    <WalletMultiButton />
+                </Box>
+            ) : (
+                <Box style={{ height: '100vh', width: '100%' }} alignItems="center" justifyContent="center">
+                    <GoogleMap  />
+                </Box>
+            )} */}
+            <Box style={{ height: '100vh', width: '100%' }} alignItems="center" justifyContent="center">
                 <Navbar />
             </Box>
         </>

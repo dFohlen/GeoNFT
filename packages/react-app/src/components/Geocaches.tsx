@@ -5,6 +5,8 @@ import { ProgramAccount } from '@project-serum/anchor';
 import GeocachesList from './GeocachesList';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
+import { GoogleMap } from './GoogleMap';
+import { Box, Typography } from '@mui/material';
 
 export default function Geocaches() {
     const location = useGeolocationPosition();
@@ -44,15 +46,12 @@ export default function Geocaches() {
     return (
         <>
             {!geocaches ? (
-                <div>
-                    <p>Loading geocaches...</p>
-                </div>
+                <Typography>Loading geocaches...</Typography>
             ) : geocaches.length === 0 ? (
-                <div>
-                    <p>No geocaches</p>
-                </div>
+                <Typography>No geocaches</Typography>
             ) : (
-                <GeocachesList geocaches={geocaches}></GeocachesList>
+                // <GeocachesList geocaches={geocaches}></GeocachesList>
+                <GoogleMap geocaches={geocaches}></GoogleMap>
             )}
         </>
     );

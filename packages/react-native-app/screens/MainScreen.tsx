@@ -5,7 +5,6 @@ import {Appbar, Divider, Portal, Text, TextInput} from 'react-native-paper';
 import AccountInfo from '../components/AccountInfo';
 import RecordMessageButton from '../components/RecordMessageButton';
 import SignMessageButton from '../components/SignMessageButton';
-import CreateGeocacheButton from '../components/CreateGeocacheButton';
 import useAuthorization from '../utils/useAuthorization';
 
 export default function MainScreen() {
@@ -36,7 +35,6 @@ export default function MainScreen() {
           </RecordMessageButton>
           <Divider style={styles.spacer} />
           <SignMessageButton message={memoText}>Sign Message</SignMessageButton>
-          <CreateGeocacheButton>Create Geocache</CreateGeocacheButton>
         </ScrollView>
         {accounts && selectedAccount ? (
           <AccountInfo

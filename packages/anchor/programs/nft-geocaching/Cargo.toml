@@ -1,7 +1,7 @@
 [package]
 name = "nft-geocaching"
-version = "0.1.0"
-description = "Created with Anchor"
+version = "0.0.1"
+description = "NFT-Geochaching Contract created with Anchor"
 edition = "2021"
 
 [lib]
