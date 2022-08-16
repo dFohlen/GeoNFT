@@ -6,11 +6,14 @@
   "repository": "",
   "license": "MIT",
   "private": true,
-  "scripts": {
-  },
+  "scripts": {},
   "workspaces": {
     "packages": [
       "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native-app",
+      "**/react-native-app/**"
     ]
   },
   "dependencies": {

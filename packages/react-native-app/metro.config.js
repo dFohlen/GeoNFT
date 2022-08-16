@@ -4,6 +4,7 @@
  *
  * @format
  */
+const path = require('path');
 
 const defaultSourceExts =
   require('metro-config/src/defaults/defaults').sourceExts;
@@ -16,4 +17,9 @@ module.exports = {
       ? [...process.env.RN_SRC_EXT.split(',').concat(defaultSourceExts), 'cjs']
       : [...defaultSourceExts, 'cjs'],
   },
+  watchFolders: [
+    //Relative path to packages directory
+    path.resolve(__dirname + '/..'),
+    path.resolve(__dirname + '/../../node_modules'),
+  ],
 };

@@ -4,6 +4,7 @@ import {
     AuthorizationResult,
     AuthToken,
     Base64EncodedAddress,
+    Finality,
 } from '@solana-mobile/mobile-wallet-adapter-protocol';
 import {
     BaseMessageSignerWalletAdapter,
@@ -126,7 +127,9 @@ export class SolanaMobileWalletAdapter extends BaseMessageSignerWalletAdapter {
                 if (this._readyState !== WalletReadyState.Installed) {
                     this.emit('readyStateChange', (this._readyState = WalletReadyState.Installed));
                 }
-                this._selectedAddress = await this._addressSelector.select(cachedAuthorizationResult.addresses);
+                this._selectedAddress = await this._addressSelector.select(
+                    cachedAuthorizationResult.accounts.map(({ address }) => address),
+                );
                 this.emit(
                     'connect',
                     // Having just set `this._selectedAddress`, `this.publicKey` is definitely non-null
@@ -155,13 +158,17 @@ export class SolanaMobileWalletAdapter extends BaseMessageSignerWalletAdapter {
         const didPublicKeysChange =
             // Case 1: We started from having no authorization.
             this._authorizationResult == null ||
-            // Case 2: The number of authorized public keys changed.
-            this._authorizationResult?.addresses.length !== authorizationResult.addresses.length ||
+            // Case 2: The number of authorized accounts changed.
+            this._authorizationResult?.accounts.length !== authorizationResult.accounts.length ||
             // Case 3: The new list of addresses isn't exactly the same as the old list, in the same order.
-            this._authorizationResult.addresses.some((address, ii) => address !== authorizationResult.addresses[ii]);
+            this._authorizationResult.accounts.some(
+                (account, ii) => account.address !== authorizationResult.accounts[ii].address,
+            );
         this._authorizationResult = authorizationResult;
         if (didPublicKeysChange) {
-            const nextSelectedAddress = await this._addressSelector.select(authorizationResult.addresses);
+            const nextSelectedAddress = await this._addressSelector.select(
+                authorizationResult.accounts.map(({ address }) => address),
+            );
             if (nextSelectedAddress !== this._selectedAddress) {
                 this._selectedAddress = nextSelectedAddress;
                 delete this._publicKey;
@@ -228,16 +235,60 @@ export class SolanaMobileWalletAdapter extends BaseMessageSignerWalletAdapter {
     async sendTransaction(
         transaction: Transaction,
         connection: Connection,
-        _options?: SendOptions,
+        options?: SendOptions,
     ): Promise<TransactionSignature> {
         return await this.runWithGuard(async () => {
             const { authToken } = this.assertIsAuthorized();
+            const minContextSlot = options?.minContextSlot;
             try {
                 return await this.transact(async (wallet) => {
-                    await this.performReauthorization(wallet, authToken);
+                    let targetCommitment: Finality;
+                    switch (connection.commitment) {
+                        case 'confirmed':
+                        case 'finalized':
+                        case 'processed':
+                            targetCommitment = connection.commitment;
+                            break;
+                        default:
+                            targetCommitment = 'finalized';
+                    }
+                    let targetPreflightCommitment: Finality;
+                    switch (options?.preflightCommitment) {
+                        case 'confirmed':
+                        case 'finalized':
+                        case 'processed':
+                            targetPreflightCommitment = options.preflightCommitment;
+                            break;
+                        case undefined:
+                            targetPreflightCommitment = targetCommitment;
+                        default:
+                            targetPreflightCommitment = 'finalized';
+                    }
+                    await Promise.all([
+                        this.performReauthorization(wallet, authToken),
+                        (async () => {
+                            if (transaction.recentBlockhash == null) {
+                                const preflightCommitmentScore =
+                                    targetPreflightCommitment === 'finalized'
+                                        ? 2
+                                        : targetPreflightCommitment === 'confirmed'
+                                        ? 1
+                                        : 0;
+                                const targetCommitmentScore =
+                                    targetCommitment === 'finalized' ? 2 : targetCommitment === 'confirmed' ? 1 : 0;
+                                const { blockhash } = await connection.getLatestBlockhash({
+                                    commitment:
+                                        preflightCommitmentScore < targetCommitmentScore
+                                            ? targetPreflightCommitment
+                                            : targetCommitment,
+                                });
+                                transaction.recentBlockhash = blockhash;
+                            }
+                        })(),
+                    ]);
+                    transaction.feePayer ||= this.publicKey ?? undefined;
                     const signatures = await wallet.signAndSendTransactions({
-                        connection,
-                        fee_payer: transaction.feePayer,
+                        minContextSlot,
                         transactions: [transaction],
                     });
                     return signatures[0];
