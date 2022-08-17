@@ -6,7 +6,13 @@
   "repository": "",
   "license": "MIT",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "anchor:build": "cd packages/anchor && npm run build",
+    "anchor:deploy": "cd packages/anchor && npm run deploy:dev",
+    "react-app:build": "cd packages/react-app && npm run build",
+    "react-app:start": "cd packages/react-app && npm run start",
+    "react-native-app:android": "cd packages/react-native-app && npm run android"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
