@@ -81,7 +81,7 @@ export default function Geocaches() {
                                         <AddShoppingCartIcon />
                                     </ListItemButton>
                                 ) : (
-                                    <Link href={`http://maps.google.com/maps?q=${geocache.account.location}`}>
+                                    <Link target="_bank" href={`http://maps.google.com/maps?q=${geocache.account.location}`}>
                                         <Navigation />
                                     </Link>
                                 )}
