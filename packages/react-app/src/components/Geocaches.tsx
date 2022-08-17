@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useAnchor } from '../hooks/useAnchor';
+import { useSnackbar } from 'notistack';
 import { listGeocaches } from '../api/listGeocaches';
+import { getGeocaches as getGeocache } from '../api/getGeocache';
 import { ProgramAccount } from '@project-serum/anchor';
-import { GeocachesList } from './GeocachesList';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import { Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
+
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemButton from '@mui/material/ListItemButton';
+import Navigation from '@mui/icons-material/Navigation';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 export default function Geocaches() {
+    const { enqueueSnackbar } = useSnackbar();
     const location = useGeolocationPosition();
     const program = useAnchor();
     const [geocaches, setGeocaches] = useState<ProgramAccount<NftGeocaching>[]>();
@@ -41,6 +50,12 @@ export default function Geocaches() {
         }
     }, [location, program, geocaches]);
 
+    const onClick = async (geocache: any) => {
+        console.log('Catch geocache: ', geocache);
+        await getGeocache(program, geocache.publicKey, geocache.account.mint);
+        enqueueSnackbar('Geocache successfully caught', { variant: 'success' });
+    };
+
     return (
         <>
             {!geocaches ? (
@@ -48,7 +63,32 @@ export default function Geocaches() {
             ) : geocaches.length === 0 ? (
                 <Typography>No geocaches</Typography>
             ) : (
-                <GeocachesList geocaches={geocaches}></GeocachesList>
+                <>
+                    <Typography>Pick a geocache</Typography>
+                    <List dense={true}>
+                        {geocaches.map((geocache: any) => (
+                            <ListItem key={geocache.publicKey.toString()}>
+                                <ListItemText
+                                    primary={geocache.publicKey.toString()}
+                                    secondary={
+                                        geocache.distance < 1
+                                            ? `${(geocache.distance * 100).toFixed(2)} m`
+                                            : `${geocache.distance.toFixed(2)} km`
+                                    }
+                                />
+                                {geocache.distance < 0.5 ? (
+                                    <ListItemButton divider={true} onClick={() => onClick(geocache)}>
+                                        <AddShoppingCartIcon />
+                                    </ListItemButton>
+                                ) : (
+                                    <Link href={`http://maps.google.com/maps?q=${geocache.account.location}`}>
+                                        <Navigation />
+                                    </Link>
+                                )}
+                            </ListItem>
+                        ))}
+                    </List>
+                </>
             )}
         </>
     );

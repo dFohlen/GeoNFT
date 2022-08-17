@@ -8,7 +8,7 @@ export async function getGeocaches(
     geocacheAccount: PublicKey,
     mint: PublicKey
 ): Promise<any> {
-    const newTokenA = anchor.web3.Keypair.generate();
+    const seeker = anchor.web3.Keypair.generate();
 
     // Vault PDA
     const [vaultAddress, vaultBump] = await anchor.web3.PublicKey.findProgramAddress(
@@ -20,10 +20,12 @@ export async function getGeocaches(
 
     const seekerAccount = await getOrCreateAssociatedTokenAccount(
         program.provider.connection,
-        newTokenA,
+        seeker,
         mint,
         (program.provider as anchor.AnchorProvider).wallet.publicKey
     );
+
+    console.log('Seeker account: ' + seekerAccount);
 
     const tx = await program.methods
         .getGeocache(vaultBump)
@@ -31,13 +33,13 @@ export async function getGeocaches(
             geocache: geocacheAccount,
             tokenAccount: vaultAddress,
             seekerTokenAccount: seekerAccount.address,
-            seeker: (program.provider as anchor.AnchorProvider).wallet.publicKey,
+            seeker: seeker.publicKey,
             mint: mint,
             systemProgram: anchor.web3.SystemProgram.programId,
             tokenProgram: TOKEN_PROGRAM_ID,
             rent: SYSVAR_RENT_PUBKEY,
         })
-        .signers([newTokenA])
+        .signers([seeker])
         .rpc();
     console.log('Transaction signature', tx);
 }
