@@ -87,9 +87,19 @@ After we linked the wallet and tried to create a new geocache, we could not dete
 Currently, the mobile wallet adapter has still limited functionality, using our app in Google Chrome with a wallet extension offers the best user experience.
 In the future, we plan to switch back to React-Native to make the game playable on mobile devices. A Solana wallet integration, a GPS functionality and a integration of a map such as Google Maps is needed for a proper integration of our app on mobile devices.
 
+## 🔭 Whats next?
+Since the hackathon is now coming to an end and we are far from having reached our goal with our idea, we would like to record some planned features. And of course the native app is just one of many.
+
+### 🌲 Sustainablity 
+The sustainability aspect does not stop at blockchain and mobile games, which is why we want to follow the basic idea of Solana and encourage people to use less energy and focus sustainable solutions. With the help of our app we want to bring people back to nature so that they can regain their lost appreciation. GeoNFT allows users to place their valuables in difficult and inaccessible places where vehicles are disadvantageous and walking or cycling is the means of choice.
+
+### 🥇 Ranking
+With a ranking system, we want to be able to guarantee our participants long-lasting fun. For example, an additional GeoNFT could be issued for each geocache collected, thus creating a global ranking list.
+
+### 📍 Landmarks
+Permanent geocaches are also planned at certain points of interest. If a user reaches this point, it gives him the opportunity to mint an NFT with the location and thereby receive proof of his presence e.g. on a summit cross on Mount Everest.
 
 ## 🧑‍💻 Technologies
-
 
 ### Solana-Blockchain
 The Solana-Blockchain is one of the most famous Smart Contract platforms with a fast growing user base. As a leading ledger to create and trade NFTs, Solana can be seen as a large competition to Ethereum.
