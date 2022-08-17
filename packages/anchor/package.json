@@ -1,6 +1,6 @@
 {
   "name": "@nft-geocaching/anchor",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "NFT-Geochaching Contract created with Anchor",
   "scripts": {
     "build": "anchor build",
