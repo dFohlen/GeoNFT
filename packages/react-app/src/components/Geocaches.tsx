@@ -3,11 +3,11 @@ import { useAnchor } from '../hooks/useAnchor';
 import { useSnackbar } from 'notistack';
 import { listGeocaches } from '../api/listGeocaches';
 import { getGeocaches as getGeocache } from '../api/getGeocache';
+import { truncateAddress } from '../utils/truncateAddress';
 import { ProgramAccount } from '@project-serum/anchor';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import { Link, Typography } from '@mui/material';
-
+import { Box, Link, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -72,7 +72,7 @@ export default function Geocaches() {
                         {geocaches.map((geocache: any) => (
                             <ListItem key={geocache.publicKey.toString()}>
                                 <ListItemText
-                                    primary={geocache.publicKey.toString()}
+                                    primary={truncateAddress(geocache.publicKey.toString())}
                                     secondary={
                                         geocache.distance < 1
                                             ? `${(geocache.distance * 100).toFixed(2)} m`
@@ -84,7 +84,10 @@ export default function Geocaches() {
                                         <AddShoppingCartIcon />
                                     </ListItemButton>
                                 ) : (
-                                    <Link target="_bank" href={`http://maps.google.com/maps?q=${geocache.account.location}`}>
+                                    <Link
+                                        target="_bank"
+                                        href={`http://maps.google.com/maps?q=${geocache.account.location}`}
+                                    >
                                         <Navigation />
                                     </Link>
                                 )}

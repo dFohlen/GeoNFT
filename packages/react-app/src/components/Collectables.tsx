@@ -8,6 +8,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
 import { createGeocache } from '../api/createGeocache';
+import { truncateAddress } from '../utils/truncateAddress';
 import { useGeolocationPosition } from '../hooks/useGeolocationPosition';
 import { ParsedAccountData } from '@solana/web3.js';
 import { useAnchor } from '../hooks/useAnchor';
@@ -75,7 +76,7 @@ export default function Collectables() {
                                     onClick={() => newGeocache(item.pubkey.toString())}
                                 >
                                     <img src={'path'} alt={'nft'} />
-                                    <ListItemText primary={item.pubkey.toString()} />
+                                    <ListItemText primary={truncateAddress(item.pubkey.toString())} />
                                 </ListItemButton>
                             ))}
                         </List>
