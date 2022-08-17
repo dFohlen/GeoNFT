@@ -42,15 +42,18 @@ export default function Collectables() {
             throw new Error('No location');
         }
 
-        nfts?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey).forEach(async (nft: any) => {
+        await nfts?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey).forEach(async (nft: any) => {
             console.log('Create: ', chosenPubkey);
-            const geocache = await createGeocache(
+            await createGeocache(
                 program,
                 nft.pubkey,
                 (nft.account.data as ParsedAccountData).parsed.info.mint,
                 location
             );
             enqueueSnackbar('Geocache created', { variant: 'success' });
+            if (nfts) {
+                setNfts(nfts.filter((n: any) => n.pubkey !== nft.pubkey));
+            }
         });
     };
 
@@ -63,8 +66,8 @@ export default function Collectables() {
                     <Typography>No NFTs found</Typography>
                 ) : (
                     <>
-                        <Typography>Choose a NFT to create a Geocache</Typography>
-                        <List dense={true} sx={{ width: '100%', maxWidth: 360 }}>
+                        <Typography>Choose a NFT to create a geocache</Typography>
+                        <List dense={true}>
                             {nfts.map((item: any) => (
                                 <ListItemButton
                                     key={item.pubkey}

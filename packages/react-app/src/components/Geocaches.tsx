@@ -54,6 +54,9 @@ export default function Geocaches() {
         console.log('Catch geocache: ', geocache);
         await getGeocache(program, geocache.publicKey, geocache.account.mint);
         enqueueSnackbar('Geocache successfully caught', { variant: 'success' });
+        if (geocaches) {
+            setGeocaches(geocaches.filter((g: any) => g.publicKey !== geocache.publicKey));
+        }
     };
 
     return (
@@ -64,7 +67,7 @@ export default function Geocaches() {
                 <Typography>No geocaches</Typography>
             ) : (
                 <>
-                    <Typography>Pick a geocache</Typography>
+                    <Typography>Catch or navigate to a geocache</Typography>
                     <List dense={true}>
                         {geocaches.map((geocache: any) => (
                             <ListItem key={geocache.publicKey.toString()}>
