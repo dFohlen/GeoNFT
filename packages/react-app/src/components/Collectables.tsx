@@ -63,7 +63,7 @@ export default function Collectables() {
                     <Typography>No NFTs found</Typography>
                 ) : (
                     <>
-                        <Typography>Choose a NFT to create a</Typography>
+                        <Typography>Choose a NFT to create a Geocache</Typography>
                         <List dense={true} sx={{ width: '100%', maxWidth: 360 }}>
                             {nfts.map((item: any) => (
                                 <ListItemButton
