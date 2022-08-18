@@ -174,8 +174,8 @@ anchor --version
 1. Run `yarn install` to install related dependencies.
 2. Go to the packages/anchor folder and run `anchor build` to build the Smart Contract.
 3. Run `anchor deploy:<network>` to deploy the Smart Contract to the Solana blockchain.
-4. a) Go to the packages/react-app folder and run `yarn start` to start the development server which will serve the app on http://localhost:3000
-4. b) Using Docker :whale: `docker build . -t geonft-react-app -f packages/react-app/Dockerfile`
+4. a) Go to the packages/react-app folder and run `yarn start` to start the development server which will serve the app on http://localhost:3000  
+   b) Using Docker :whale: `docker build . -t geonft-react-app -f packages/react-app/Dockerfile`
 
 ---
 
