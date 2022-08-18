@@ -59,23 +59,22 @@ Happy hunting!
 
 ## 🗺️ Demo Flow
 
-1. The NFT holder goes to a location of his choice where he/she would like to place the NFT.
+1. The NFT holder goes to a location of his/her choice where he/she would like to place the NFT.
 2. The NFT and the location coordinates are then sent from the holders wallet to our smart contract. The coordinates are additionally encrypted to prevent misuse or theft of the NFTs.
 3. Searchers can now use the app to see where the nearest NFTs are and make their way there.
 4. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
 
-
-## 🤕 Problems we run into
+## 🤕 Problems we ran into
 First of all, we had the major challenge in general of never having worked with Solana, Rust or React-Native before. But of course we embraced that and started by researching the best practices for creating and deploying smart contracts on Solana. We quickly came across Anchor and familiarized ourselves with its Anchor book and the basics of Solana Contracts.
 
 ### Transfer any NFT to our contract and back
-It seems trivial at first, but after we had finished the basic contract for setting a geolocation of the geocache, we asked ourselves how we can transfer the associated NFT to the contract. Here the examples were significantly fewer. At some point we found a solution called Program Derived Addresses (PDAs).
+It seems trivial at first, but after we had finished the basic contract for setting a geolocation of the geocache, we asked ourselves how we can transfer the associated NFT to the contract. The examples of something like this are significantly less common. At some point we found a solution called Program Derived Addresses (PDAs).
 
 ### Minting own NFTs
 The NFTs in the Smart Contract can be taken by everyone who claims to have the coordinates that the NFT was stored on. In practice hackers could call the functions without playing along the rules and steal the NFTs. To solve the problem we plan to put a key into out application that is stored on-chain as hash to make sure only users of the application can extract NFTs.
 
 ### Limitation of the new mobile wallet adapter
-After the contract was deployed, we wanted to start with the app. Here we quickly encountered limitations caused by the new mobile wallet adapter. Among other things, only Android and not iOS is currently supported, and you also need a fake wallet (also only Android) to sign transactions. There are also no examples of how to use an anchor contract with it. When we asked the developers, we were told that everything is still under development. So after some tests, we decided to implement a React app as a Progressive Web App (PWA) for mobile devices.
+After the contract was deployed, we wanted to start with the app. Here we quickly encountered limitations caused by the new mobile wallet adapter. Among other things, only Android and not iOS is currently supported, and you also need a fake wallet (also only Android) to sign transactions. There are also no examples of how to use an Anchor contract with it. When we asked the developers, we were told that everything is still under development. So after some tests, we decided to implement a React app as a Progressive Web App (PWA) for mobile devices.
   
 ### Wallet connect on PWA
 We started the implementation and everything worked at the browser level without any major incidents. But when we tested the app on a smartphone, we could not link a wallet, even though the Phantom app was also installed. After a Github search, we found out that the [deep links](https://phantom.app/blog/introducing-phantom-deeplinks) to the wallet are not yet supported by the Solana wallet adapter and would therefore only work in the in-app Phantom browser. Of course we tested this and ended up with the SSL requirement. We have also built a solution for this, but then we came to the next problem.
