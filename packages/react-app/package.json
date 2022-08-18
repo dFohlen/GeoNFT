@@ -14,7 +14,7 @@
         "@metaplex-foundation/mpl-token-metadata": "^2.2.3",
         "@mui/icons-material": "^5.8.4",
         "@mui/material": "^5.8.4",
-        "@nft-geocaching/anchor": "^0.0.1",
+        "@nft-geocaching/anchor": "^0.0.2",
         "@project-serum/anchor": "^0.25.0",
         "@solana/spl-token": "^0.2.0",
         "@solana/wallet-adapter-base": "^0.9.9",
