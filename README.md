@@ -173,6 +173,9 @@ Verify the installation.
 anchor --version
 ```
 
+#### NFT
+To create your own NFT and then place it around the world, you can do this via https://app.strataprotocol.com/launchpad/create.
+
 ### How to build/run
 
 1. Run `yarn install` to install related dependencies.
