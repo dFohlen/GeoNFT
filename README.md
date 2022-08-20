@@ -28,13 +28,14 @@
   <p align="center">
     A decentralized NFT geocaching application
     <br />
-    <a href="https://www.youtube.com/channel/UCylMUqkb21OVtQnIQHGtjuw">View Demo</a>
+    <a href="https://youtu.be/TQ3Ajt4auxU">View Demo</a>
     ·
     <a href="https://github.com/dFohlen/GeoNFT/issues">Report Bug</a>
     ·
     <a href="https://github.com/dFohlen/GeoNFT/issues">Request Feature</a>
   </p>
 </div>
+
 
 # GeoNFT
 <img src="https://user-images.githubusercontent.com/28490587/184869199-e7e38ec0-6954-424d-9874-9a09c5b55459.svg" width="250">
@@ -59,10 +60,11 @@ Happy hunting!
 
 ## 🗺️ Demo Flow
 
-1. The NFT holder goes to a location of his/her choice where he/she would like to place the NFT.
-2. The NFT and the location coordinates are then sent from the holders wallet to our smart contract. The coordinates are additionally encrypted to prevent misuse or theft of the NFTs.
-3. Searchers can now use the app to see where the nearest NFTs are and make their way there.
-4. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
+1. Connect a Solana compatible wallet of your choice e.g. Phantom
+2. The NFT holder goes to a location of his/her choice where he/she would like to place the NFT.
+3. The NFT and the location coordinates are then sent from the holders wallet to our smart contract. The coordinates are additionally encrypted to prevent misuse or theft of the NFTs.
+4. Searchers can now use the app to see where the nearest NFTs are and make their way there.
+5. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
 
 ## 🤕 Problems we ran into
 First of all, we had the major challenge in general of never having worked with Solana, Rust or React-Native before. But of course we embraced that and started by researching the best practices for creating and deploying smart contracts on Solana. We quickly came across Anchor and familiarized ourselves with its Anchor book and the basics of Solana Contracts.
