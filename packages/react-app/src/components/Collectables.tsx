@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, ListItemAvatar } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { getParsedTokenAccountsByOwner, getMetadataByTokenAccounts } from '../api/getNFTs';
 import { createGeocache } from '../api/createGeocache';
@@ -43,19 +44,21 @@ export default function Collectables() {
             throw new Error('No location');
         }
 
-        await nfts?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey).forEach(async (nft: any) => {
-            console.log('Create: ', chosenPubkey);
-            await createGeocache(
-                program,
-                nft.pubkey,
-                (nft.account.data as ParsedAccountData).parsed.info.mint,
-                location
-            );
-            enqueueSnackbar('Geocache created', { variant: 'success' });
-            if (nfts) {
-                setNfts(nfts.filter((n: any) => n.pubkey !== nft.pubkey));
-            }
-        });
+        await nfts
+            ?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey)
+            .forEach(async (nft: any) => {
+                console.log('Create: ', chosenPubkey);
+                await createGeocache(
+                    program,
+                    nft.pubkey,
+                    (nft.account.data as ParsedAccountData).parsed.info.mint,
+                    location
+                );
+                enqueueSnackbar('Geocache created', { variant: 'success' });
+                if (nfts) {
+                    setNfts(nfts.filter((n: any) => n.pubkey !== nft.pubkey));
+                }
+            });
     };
 
     return (
@@ -68,16 +71,22 @@ export default function Collectables() {
                 ) : (
                     <>
                         <Typography>Choose a NFT to create a geocache</Typography>
-                        <List dense={true}>
+                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
                             {nfts.map((item: any) => (
-                                <ListItemButton
-                                    key={item.pubkey}
-                                    divider={true}
-                                    onClick={() => newGeocache(item.pubkey.toString())}
-                                >
-                                    <img src={'path'} alt={'nft'} />
-                                    <ListItemText primary={truncateAddress(item.pubkey.toString())} />
-                                </ListItemButton>
+                                <>
+                                    <ListItem key={item.pubkey} alignItems="flex-start">
+                                        <ListItemAvatar>
+                                            <img src={'path'} />
+                                        </ListItemAvatar>
+                                        <ListItemButton
+                                            key={item.pubkey}
+                                            onClick={() => newGeocache(item.pubkey.toString())}
+                                        >
+                                            <ListItemText primary={truncateAddress(item.pubkey.toString())} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                    <Divider />
+                                </>
                             ))}
                         </List>
                     </>

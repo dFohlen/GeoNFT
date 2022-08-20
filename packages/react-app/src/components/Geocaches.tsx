@@ -7,11 +7,12 @@ import { truncateAddress } from '../utils/truncateAddress';
 import { ProgramAccount } from '@project-serum/anchor';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import { Box, Link, Typography } from '@mui/material';
+import { Box, IconButton, Link, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemButton from '@mui/material/ListItemButton';
+import Divider from '@mui/material/Divider';
 import Navigation from '@mui/icons-material/Navigation';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
@@ -68,30 +69,39 @@ export default function Geocaches() {
             ) : (
                 <>
                     <Typography>Catch or navigate to a geocache</Typography>
-                    <List dense={true}>
+                    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
                         {geocaches.map((geocache: any) => (
-                            <ListItem key={geocache.publicKey.toString()}>
-                                <ListItemText
-                                    primary={truncateAddress(geocache.publicKey.toString())}
-                                    secondary={
-                                        geocache.distance < 1
-                                            ? `${(geocache.distance * 100).toFixed(2)} m`
-                                            : `${geocache.distance.toFixed(2)} km`
+                            <>
+                                <ListItem
+                                    key={geocache.publicKey.toString()}
+                                    secondaryAction={
+                                        geocache.distance < 0.5 ? (
+                                            <IconButton onClick={() => onClick(geocache)}>
+                                                <AddShoppingCartIcon />
+                                            </IconButton>
+                                        ) : (
+                                            <Link
+                                                target="_blank"
+                                                href={`https://www.google.com/maps/dir/?api=1&destination=${geocache.account.location}`}
+                                            >
+                                                <IconButton>
+                                                    <Navigation />
+                                                </IconButton>
+                                            </Link>
+                                        )
                                     }
-                                />
-                                {geocache.distance < 0.5 ? (
-                                    <ListItemButton divider={true} onClick={() => onClick(geocache)}>
-                                        <AddShoppingCartIcon />
-                                    </ListItemButton>
-                                ) : (
-                                    <Link
-                                        target="_bank"
-                                        href={`http://maps.google.com/maps?q=${geocache.account.location}`}
-                                    >
-                                        <Navigation />
-                                    </Link>
-                                )}
-                            </ListItem>
+                                >
+                                    <ListItemText
+                                        primary={truncateAddress(geocache.publicKey.toString())}
+                                        secondary={
+                                            geocache.distance < 1
+                                                ? `${(geocache.distance * 100).toFixed(2)} m`
+                                                : `${geocache.distance.toFixed(2)} km`
+                                        }
+                                    />
+                                </ListItem>
+                                <Divider />
+                            </>
                         ))}
                     </List>
                 </>
@@ -99,3 +109,16 @@ export default function Geocaches() {
         </>
     );
 }
+
+// geocache.distance < /> 0.5 ? (
+// <ListItemButton onClick={() => onClick(geocache)}>
+//     <AddShoppingCartIcon />
+// </ListItemButton>
+// ) : (
+//     <Link />
+//         target="_bank"
+//         href={`http://maps.google.com/maps?q=${geocache.account.location}`}
+//     >
+//         <Navigation />
+//     </Link>
+// )
