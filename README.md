@@ -100,7 +100,7 @@ In the future, we plan to switch back to React-Native to make the game playable 
 ## 🔭 Whats next?
 Since the hackathon is now coming to an end and we are far from having reached our goal with our idea, we would like to record some planned features. And of course the native app is just one of many.
 
-### 🌱 Sustainablity 
+### 🌱 Sustainability 
 The sustainability aspect does not stop at blockchain and mobile games, which is why we want to follow the basic idea of Solana and encourage people to use less energy and focus sustainable solutions. With the help of our app we want to bring people back to nature so that they can regain their lost appreciation. GeoNFT allows users to place their valuables in difficult and inaccessible places where vehicles are disadvantageous and walking or cycling is the means of choice. A bonus program and time-limited challenges could provide additional incentives.
 
 ### 🥇 Ranking
