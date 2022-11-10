@@ -74,27 +74,35 @@ export default function Collectables() {
                     </Typography>
                 ) : (
                     <>
-                        <Typography variant="h5" color={'white'}>
+                        <Typography align="center" variant="h5" color={'white'}>
                             Choose a NFT to create a geocache
                         </Typography>
-                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
-                            {nfts.map((item: any) => (
-                                <>
-                                    <ListItem key={item.pubkey} alignItems="flex-start">
-                                        <ListItemAvatar>
-                                            <img src={'path'} />
-                                        </ListItemAvatar>
-                                        <ListItemButton
-                                            key={item.pubkey}
-                                            onClick={() => newGeocache(item.pubkey.toString())}
-                                        >
-                                            <ListItemText primary={truncateAddress(item.pubkey.toString())} />
-                                        </ListItemButton>
-                                    </ListItem>
-                                    <Divider />
-                                </>
-                            ))}
-                        </List>
+                        <Box display="flex" justifyContent="center">
+                            <List
+                                sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent', marginTop: 2 }}
+                                dense={true}
+                            >
+                                {nfts.map((item: any) => (
+                                    <>
+                                        <Divider sx={{ bgcolor: 'gray' }} />
+                                        <ListItem key={item.pubkey} alignItems="flex-start">
+                                            <ListItemAvatar>
+                                                <img src={'path'} />
+                                            </ListItemAvatar>
+                                            <ListItemButton
+                                                key={item.pubkey}
+                                                onClick={() => newGeocache(item.pubkey.toString())}
+                                            >
+                                                <ListItemText
+                                                    primaryTypographyProps={{ style: { color: 'white' } }}
+                                                    primary={truncateAddress(item.pubkey.toString())}
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </>
+                                ))}
+                            </List>
+                        </Box>
                     </>
                 )}
             </Grid>

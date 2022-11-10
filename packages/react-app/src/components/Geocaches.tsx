@@ -11,7 +11,6 @@ import { Box, IconButton, Link, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
 import Divider from '@mui/material/Divider';
 import Navigation from '@mui/icons-material/Navigation';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -27,6 +26,10 @@ export default function Geocaches() {
         if (!geocaches && location) {
             const fetchData = async () => {
                 const rawGeocaches = await listGeocaches(program);
+                if (!rawGeocaches) {
+                    setGeocaches([]);
+                    return;
+                }
                 const geocachesWithDistance = rawGeocaches
                     .map((geocache: any) => {
                         const coordinates = geocache.account.location.split(',');
@@ -72,44 +75,47 @@ export default function Geocaches() {
                 </Typography>
             ) : (
                 <>
-                    <Typography variant="h5" color={'white'}>
+                    <Typography align="center" variant="h5" color={'white'}>
                         Catch or navigate to a geocache
                     </Typography>
-                    <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
-                        {geocaches.map((geocache: any) => (
-                            <>
-                                <ListItem
-                                    key={geocache.publicKey.toString()}
-                                    secondaryAction={
-                                        geocache.distance < 0.5 ? (
-                                            <IconButton onClick={() => onClick(geocache)}>
-                                                <AddShoppingCartIcon />
-                                            </IconButton>
-                                        ) : (
-                                            <Link
-                                                target="_blank"
-                                                href={`https://www.google.com/maps/dir/?api=1&destination=${geocache.account.location}`}
-                                            >
-                                                <IconButton>
-                                                    <Navigation />
+                    <Box display="flex" justifyContent="center">
+                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
+                            {geocaches.map((geocache: any) => (
+                                <>
+                                    <Divider sx={{ bgcolor: 'gray' }} />
+                                    <ListItem
+                                        key={geocache.publicKey.toString()}
+                                        secondaryAction={
+                                            geocache.distance < 0.5 ? (
+                                                <IconButton onClick={() => onClick(geocache)}>
+                                                    <AddShoppingCartIcon />
                                                 </IconButton>
-                                            </Link>
-                                        )
-                                    }
-                                >
-                                    <ListItemText
-                                        primary={truncateAddress(geocache.publicKey.toString())}
-                                        secondary={
-                                            geocache.distance < 1
-                                                ? `${(geocache.distance * 100).toFixed(2)} m`
-                                                : `${geocache.distance.toFixed(2)} km`
+                                            ) : (
+                                                <Link
+                                                    target="_blank"
+                                                    href={`https://www.google.com/maps/dir/?api=1&destination=${geocache.account.location}`}
+                                                >
+                                                    <IconButton>
+                                                        <Navigation />
+                                                    </IconButton>
+                                                </Link>
+                                            )
                                         }
-                                    />
-                                </ListItem>
-                                <Divider />
-                            </>
-                        ))}
-                    </List>
+                                    >
+                                        <ListItemText
+                                            primaryTypographyProps={{ style: { color: 'white' } }}
+                                            primary={truncateAddress(geocache.publicKey.toString())}
+                                            secondary={
+                                                geocache.distance < 1
+                                                    ? `${(geocache.distance * 100).toFixed(2)} m`
+                                                    : `${geocache.distance.toFixed(2)} km`
+                                            }
+                                        />
+                                    </ListItem>
+                                </>
+                            ))}
+                        </List>
+                    </Box>
                 </>
             )}
         </>
