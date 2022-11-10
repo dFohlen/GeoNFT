@@ -63,12 +63,18 @@ export default function Geocaches() {
     return (
         <>
             {!geocaches ? (
-                <Typography>Loading geocaches...</Typography>
+                <Typography variant="h5" color={'white'}>
+                    Loading geocaches...
+                </Typography>
             ) : geocaches.length === 0 ? (
-                <Typography>No geocaches</Typography>
+                <Typography variant="h5" color={'white'}>
+                    No geocaches
+                </Typography>
             ) : (
                 <>
-                    <Typography>Catch or navigate to a geocache</Typography>
+                    <Typography variant="h5" color={'white'}>
+                        Catch or navigate to a geocache
+                    </Typography>
                     <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
                         {geocaches.map((geocache: any) => (
                             <>

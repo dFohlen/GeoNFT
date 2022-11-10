@@ -65,12 +65,18 @@ export default function Collectables() {
         <>
             <Grid item xs={12}>
                 {!nfts ? (
-                    <Typography>Loading NFTs...</Typography>
+                    <Typography variant="h5" color={'white'}>
+                        Loading NFTs...
+                    </Typography>
                 ) : nfts.length === 0 ? (
-                    <Typography>No NFTs found</Typography>
+                    <Typography variant="h5" color={'white'}>
+                        You do not have any NFTs
+                    </Typography>
                 ) : (
                     <>
-                        <Typography>Choose a NFT to create a geocache</Typography>
+                        <Typography variant="h5" color={'white'}>
+                            Choose a NFT to create a geocache
+                        </Typography>
                         <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
                             {nfts.map((item: any) => (
                                 <>

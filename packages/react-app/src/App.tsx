@@ -17,6 +17,8 @@ import { Theme } from './Theme';
 import { useSnackbar } from 'notistack';
 import { Grid } from '@material-ui/core';
 import Navbar from './components/Navbar';
+import Header from './components/Header';
+import { Typography } from '@mui/material';
 
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -84,18 +86,32 @@ const Content: FC = () => {
 
     return (
         <>
+            <Header />
             <Grid
                 container
-                spacing={0}
+                spacing={5}
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
                 style={{ minHeight: '100vh' }}
             >
-                <Grid item xs={12}>
-                    {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && <WalletMultiButton />}
+                <Grid item xs={6}>
+                    {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && (
+                        <>
+                            <Typography variant="h3" align="center" color={'lightgray'}>
+                                Welcome to GeoNFT!
+                            </Typography>
+                            <Typography marginTop={3} align="center" color={'lightgray'}>
+                                GeoNFT is an outdoor activity game in which participants use a Global Positioning System
+                                (GPS) to search for Non-Fungible Tokens (NFTs) around the world.
+                            </Typography>
+                            <Typography marginTop={3} align="center" color={'lightgray'}>
+                                Connect your Solana compatible wallet and let the hunt begin!
+                            </Typography>
+                        </>
+                    )}
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item>
                     <Navbar />
                 </Grid>
             </Grid>

@@ -20,16 +20,23 @@ const theme = createTheme({
         },
     },
     components: {
-        // MuiCssBaseline: {
-        //     styleOverrides: {
-        //         body: {
-        //             backgroundImage:
-        //                 'radial-gradient(circle farthest-corner at top left, rgba(0, 0, 0, 0.10) 0%, rgba(0, 155, 150, 0.5) 50%),\n' +
-        //                 'radial-gradient(circle farthest-corner at bottom right, rgba(225, 183, 82, 1) 0%, rgba(0, 0, 0, 0.5) 50%)',
-        //             backgroundAttachment: 'fixed',
-        //         },
-        //     },
-        // },
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    backgroundColor: '#0f0e13',
+                    backgroundImage:
+                        'radial-gradient(at 0% 0%,  hsla(225,39%,20%,1) 0, transparent 50%),\n' +
+                        'radial-gradient(at 50% 0%, hsla(253,16%,7%,1) 0, transparent 50%),\n' +
+                        'radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%),\n' +
+                        'radial-gradient(at 0% 50%, hsla(339,49%,10%,1) 0, transparent 50%),\n' +
+                        'radial-gradient(at 100% 50%, hsla(225,39%,20%,1) 0, transparent 50%),\n' +
+                        'radial-gradient(at 0% 100%, hsla(255,65%,15%,1)0, transparent 50%),\n' +
+                        'radial-gradient(at 100% 100%, hsla(255,65%,15%,1)0, transparent 50%),\n' +
+                        'radial-gradient(at 50% 100%, hsla(339,49%,10%,1) 0, transparent 50%)',
+                    backgroundAttachment: 'fixed',
+                },
+            },
+        },
         MuiBottomNavigation: {
             styleOverrides: {
                 root: {
