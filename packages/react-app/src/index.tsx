@@ -2,6 +2,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import * as buffer from 'buffer';
+window.Buffer = buffer.Buffer;
 
 const root = createRoot(document.getElementById('root')!);
 root.render(
