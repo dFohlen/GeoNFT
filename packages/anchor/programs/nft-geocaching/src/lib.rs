@@ -14,7 +14,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount};
 
-declare_id!("9Jn6f1txpvCfRZ3vf38DcsueJM8irWz85zNuavMZSDvh");
+declare_id!("3urb6hjE42dc3bYTP7eypef4UAUd5SxYNq3e4JQaeaS7");
 
 #[program]
 pub mod nft_geocaching {
@@ -83,7 +83,7 @@ pub struct Geocache {
     owner: Pubkey,
     // Owner of the geocache
     mint: Pubkey,
-    // Owner of the geocache
+    // NFT in the geocache
     location: String,
     // Location of the geocache
     active: u8,
