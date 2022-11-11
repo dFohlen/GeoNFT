@@ -25,7 +25,7 @@ export default function Navbar() {
                         left: 0,
                         right: 0,
                         background: 'transparent',
-                        boxShadow: '0 5px 5px rgba(0, 0, 0, .5)',
+                        boxShadow: '0px 3px 10px rgba(0, 0, 0, 1)',
                     }}
                     value={value}
                     onChange={(event, newValue: string) => {
@@ -37,13 +37,13 @@ export default function Navbar() {
                         // style={{ color: '#d33265' }}
                         // label="Collectables"
                         value="collectables"
-                        icon={<AccountBalanceWallet style={{ color: '#d33265' }} />}
+                        icon={<AccountBalanceWallet fontSize="large" style={{ color: '#d33265' }} />}
                     />
                     <BottomNavigationAction
                         // style={{ color: '#d33265' }}
                         // label="Map"
                         value="map"
-                        icon={<Map style={{ color: '#d33265' }} />}
+                        icon={<Map fontSize="large" style={{ color: '#d33265' }} />}
                     />
                 </BottomNavigation>
             </Grid>

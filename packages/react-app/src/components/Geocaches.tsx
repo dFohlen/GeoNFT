@@ -7,13 +7,14 @@ import { truncateAddress } from '../utils/truncateAddress';
 import { ProgramAccount } from '@project-serum/anchor';
 import { useGeolocationPosition, distanceInKmBetweenEarthCoordinates } from '../hooks/useGeolocationPosition';
 import { NftGeocaching } from '@nft-geocaching/anchor/target/types/nft_geocaching';
-import { Box, IconButton, Link, Typography } from '@mui/material';
+import { Box, IconButton, Link, Typography, ListItemAvatar } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Navigation from '@mui/icons-material/Navigation';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import SolanaLogo from '../assets/solana-sol-logo.svg';
 
 export default function Geocaches() {
     const { enqueueSnackbar } = useSnackbar();
@@ -106,6 +107,9 @@ export default function Geocaches() {
                                             )
                                         }
                                     >
+                                        <ListItemAvatar>
+                                            <img style={{ height: 10 }} src={SolanaLogo} />
+                                        </ListItemAvatar>
                                         <ListItemText
                                             primaryTypographyProps={{ style: { color: 'white' } }}
                                             secondaryTypographyProps={{ style: { color: 'gray' } }}

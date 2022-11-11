@@ -14,6 +14,7 @@ import { useGeolocationPosition } from '../hooks/useGeolocationPosition';
 import { ParsedAccountData } from '@solana/web3.js';
 import { useAnchor } from '../hooks/useAnchor';
 import { useSnackbar } from 'notistack';
+import SolanaLogo from '../assets/solana-sol-logo.svg';
 
 export default function Collectables() {
     const { enqueueSnackbar } = useSnackbar();
@@ -91,7 +92,7 @@ export default function Collectables() {
                                         <Divider sx={{ bgcolor: 'gray' }} />
                                         <ListItem key={item.pubkey} alignItems="flex-start">
                                             <ListItemAvatar>
-                                                <img src={'path'} />
+                                                <img style={{ height: 10 }} src={SolanaLogo} />
                                             </ListItemAvatar>
                                             <ListItemButton
                                                 key={item.pubkey}
