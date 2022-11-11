@@ -48,13 +48,17 @@ export default function Collectables() {
             ?.filter((nft: any) => nft.pubkey.toString() === chosenPubkey)
             .forEach(async (nft: any) => {
                 console.log('Create: ', chosenPubkey);
-                await createGeocache(
+                const success = await createGeocache(
                     program,
                     nft.pubkey,
                     (nft.account.data as ParsedAccountData).parsed.info.mint,
                     location
                 );
-                enqueueSnackbar('Geocache created', { variant: 'success' });
+                if (!success) {
+                    enqueueSnackbar('Creating geocache failed!', { variant: 'warning' });
+                    return;
+                }
+                enqueueSnackbar('Geocache created!', { variant: 'success' });
                 if (nfts) {
                     setNfts(nfts.filter((n: any) => n.pubkey !== nft.pubkey));
                 }

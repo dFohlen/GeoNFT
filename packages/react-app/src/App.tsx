@@ -98,7 +98,7 @@ const Content: FC = () => {
                 <Grid item xs={6}>
                     {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && (
                         <>
-                            <Typography variant="h3" align="center" color={'lightgray'}>
+                            <Typography variant="h4" align="center" color={'lightgray'}>
                                 Welcome to GeoNFT!
                             </Typography>
                             <Typography marginTop={3} align="center" color={'lightgray'}>

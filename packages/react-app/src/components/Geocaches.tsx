@@ -56,8 +56,12 @@ export default function Geocaches() {
 
     const onClick = async (geocache: any) => {
         console.log('Catch geocache: ', geocache);
-        await getGeocache(program, geocache.publicKey, geocache.account.mint);
-        enqueueSnackbar('Geocache successfully caught', { variant: 'success' });
+        const success = await getGeocache(program, geocache.publicKey, geocache.account.mint);
+        if (!success) {
+            enqueueSnackbar('Error catching geocache!', { variant: 'warning' });
+            return;
+        }
+        enqueueSnackbar('Geocache successfully caught!', { variant: 'success' });
         if (geocaches) {
             setGeocaches(geocaches.filter((g: any) => g.publicKey !== geocache.publicKey));
         }
@@ -79,7 +83,7 @@ export default function Geocaches() {
                         Catch or navigate to a geocache
                     </Typography>
                     <Box display="flex" justifyContent="center">
-                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} dense={true}>
+                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }} dense={true}>
                             {geocaches.map((geocache: any) => (
                                 <>
                                     <Divider sx={{ bgcolor: 'gray' }} />
@@ -88,7 +92,7 @@ export default function Geocaches() {
                                         secondaryAction={
                                             geocache.distance < 0.5 ? (
                                                 <IconButton onClick={() => onClick(geocache)}>
-                                                    <AddShoppingCartIcon />
+                                                    <AddShoppingCartIcon style={{ color: 'white' }} />
                                                 </IconButton>
                                             ) : (
                                                 <Link
@@ -96,7 +100,7 @@ export default function Geocaches() {
                                                     href={`https://www.google.com/maps/dir/?api=1&destination=${geocache.account.location}`}
                                                 >
                                                     <IconButton>
-                                                        <Navigation />
+                                                        <Navigation style={{ color: 'white' }} />
                                                     </IconButton>
                                                 </Link>
                                             )
@@ -104,6 +108,7 @@ export default function Geocaches() {
                                     >
                                         <ListItemText
                                             primaryTypographyProps={{ style: { color: 'white' } }}
+                                            secondaryTypographyProps={{ style: { color: 'gray' } }}
                                             primary={truncateAddress(geocache.publicKey.toString())}
                                             secondary={
                                                 geocache.distance < 1

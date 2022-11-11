@@ -73,6 +73,17 @@ export async function getParsedTokenAccountsByOwner(program: anchor.Program<NftG
         ],
     });
 
+    for (const account of accounts) {
+        try {
+            // const nftsmetadata = await Metadata.findDataByOwner(solanaConnection, walletAddress)
+            // const metadata = await Metadata.load(program.provider.connection, account.pubkey);
+            const metadata = await Metadata.fromAccountAddress(program.provider.connection, account.pubkey);
+            console.log('MetaData: ', metadata);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     accounts = accounts
         .filter(({ account }) => {
             if ((account.data as ParsedAccountData).parsed.info.tokenAmount.uiAmount === 1) return true;
@@ -88,13 +99,13 @@ export async function getParsedTokenAccountsByOwner(program: anchor.Program<NftG
 export async function getMetadataByTokenAccounts(
     tokenAccounts: Array<{
         pubkey: PublicKey;
-        account: AccountInfo<Buffer>;
+        account: AccountInfo<Buffer | ParsedAccountData>;
     }>
 ): Promise<void> {
     for (const tokenAccount of tokenAccounts) {
         try {
-            const metadata = await Metadata.fromAccountInfo(tokenAccount.account);
-            console.log(metadata);
+            const metadata = await Metadata.fromAccountInfo(tokenAccount.account as AccountInfo<Buffer>);
+            console.log('MetaData: ', metadata);
         } catch (e) {
             console.log(e);
         }

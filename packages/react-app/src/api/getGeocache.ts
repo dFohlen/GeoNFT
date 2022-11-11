@@ -8,38 +8,44 @@ export async function getGeocaches(
     geocacheAccount: PublicKey,
     mint: PublicKey
 ): Promise<any> {
-    const seeker = anchor.web3.Keypair.generate();
+    try {
+        const seeker = anchor.web3.Keypair.generate();
 
-    // Vault PDA
-    const [vaultAddress, vaultBump] = await anchor.web3.PublicKey.findProgramAddress(
-        [geocacheAccount.toBytes()],
-        program.programId
-    );
-    console.log('Vault PDA: ' + vaultAddress.toString());
-    console.log('Vault bump: ' + vaultBump.toString());
+        // Vault PDA
+        const [vaultAddress, vaultBump] = await anchor.web3.PublicKey.findProgramAddress(
+            [geocacheAccount.toBytes()],
+            program.programId
+        );
+        console.log('Vault PDA: ' + vaultAddress.toString());
+        console.log('Vault bump: ' + vaultBump.toString());
 
-    const seekerAccount = await getOrCreateAssociatedTokenAccount(
-        program.provider.connection,
-        seeker,
-        mint,
-        (program.provider as anchor.AnchorProvider).wallet.publicKey
-    );
+        const seekerAccount = await getOrCreateAssociatedTokenAccount(
+            program.provider.connection,
+            seeker,
+            mint,
+            (program.provider as anchor.AnchorProvider).wallet.publicKey
+        );
 
-    console.log('Seeker account: ' + seekerAccount);
+        console.log('Seeker account: ' + seekerAccount);
 
-    const tx = await program.methods
-        .getGeocache(vaultBump)
-        .accounts({
-            geocache: geocacheAccount,
-            tokenAccount: vaultAddress,
-            seekerTokenAccount: seekerAccount.address,
-            seeker: seeker.publicKey,
-            mint: mint,
-            systemProgram: anchor.web3.SystemProgram.programId,
-            tokenProgram: TOKEN_PROGRAM_ID,
-            rent: SYSVAR_RENT_PUBKEY,
-        })
-        .signers([seeker])
-        .rpc();
-    console.log('Transaction signature', tx);
+        const tx = await program.methods
+            .getGeocache(vaultBump)
+            .accounts({
+                geocache: geocacheAccount,
+                tokenAccount: vaultAddress,
+                seekerTokenAccount: seekerAccount.address,
+                seeker: seeker.publicKey,
+                mint: mint,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                tokenProgram: TOKEN_PROGRAM_ID,
+                rent: SYSVAR_RENT_PUBKEY,
+            })
+            .signers([seeker])
+            .rpc();
+        console.log('Transaction signature', tx);
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+    return true;
 }

@@ -8,42 +8,48 @@ export async function createGeocache(
     hiderTokenAccount: PublicKey,
     mint: PublicKey,
     location: GeolocationPosition
-) {
-    const newGeocache = anchor.web3.Keypair.generate();
+): Promise<boolean> {
+    try {
+        const newGeocache = anchor.web3.Keypair.generate();
 
-    // Vault PDA
-    const [vaultAddress, vaultBump] = await anchor.web3.PublicKey.findProgramAddress(
-        [newGeocache.publicKey.toBytes()],
-        program.programId
-    );
+        // Vault PDA
+        const [vaultAddress, vaultBump] = await anchor.web3.PublicKey.findProgramAddress(
+            [newGeocache.publicKey.toBytes()],
+            program.programId
+        );
 
-    console.log('Vault PDA', vaultAddress.toString());
-    console.log('Vault bump', vaultBump.toString());
+        console.log('Vault PDA', vaultAddress.toString());
+        console.log('Vault bump', vaultBump.toString());
 
-    const hiderAccount = await getAccount(program.provider.connection, hiderTokenAccount);
+        const hiderAccount = await getAccount(program.provider.connection, hiderTokenAccount);
 
-    console.log('Hider Account', hiderAccount);
+        console.log('Hider Account', hiderAccount);
 
-    if (hiderAccount.amount < 1) {
-        throw new Error('Hider account does not have enough tokens');
+        if (hiderAccount.amount < 1) {
+            throw new Error('Hider account does not have enough tokens');
+        }
+
+        const tx = await program.methods
+            .createGeocache(vaultBump, location.coords.latitude + ',' + location.coords.longitude)
+            .accounts({
+                geocache: newGeocache.publicKey,
+                tokenAccount: vaultAddress,
+                hiderTokenAccount: hiderTokenAccount,
+                hider: (program.provider as anchor.AnchorProvider).wallet.publicKey,
+                mint: mint,
+                systemProgram: anchor.web3.SystemProgram.programId,
+                tokenProgram: TOKEN_PROGRAM_ID,
+                rent: SYSVAR_RENT_PUBKEY,
+            })
+            .signers([newGeocache])
+            .rpc();
+        console.log('Transaction signature', tx);
+
+        const geocache = await program.account.geocache.fetch(newGeocache.publicKey);
+        console.log('Geocache', geocache);
+    } catch (error) {
+        console.log(error);
+        return false;
     }
-
-    const tx = await program.methods
-        .createGeocache(vaultBump, location.coords.latitude + ',' + location.coords.longitude)
-        .accounts({
-            geocache: newGeocache.publicKey,
-            tokenAccount: vaultAddress,
-            hiderTokenAccount: hiderTokenAccount,
-            hider: (program.provider as anchor.AnchorProvider).wallet.publicKey,
-            mint: mint,
-            systemProgram: anchor.web3.SystemProgram.programId,
-            tokenProgram: TOKEN_PROGRAM_ID,
-            rent: SYSVAR_RENT_PUBKEY,
-        })
-        .signers([newGeocache])
-        .rpc();
-    console.log('Transaction signature', tx);
-
-    const geocache = await program.account.geocache.fetch(newGeocache.publicKey);
-    console.log('Geocache', geocache);
+    return true;
 }
