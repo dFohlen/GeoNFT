@@ -70,10 +70,13 @@ Happy hunting!
 4. Searchers can now use the app to see where the nearest NFTs are and make their way there.
 5. The first person who finds the NFT gets the opportunity to take it. This is transferred from the smart contract to the finders wallet.
 
-Create Geocache from Token | Created Geocaches         |  Navigate to Geocache      |  Catch Geocache with Token
+Starter Page | Connect Wallet | Create Geocache from Token | Confirm Transaction |
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://user-images.githubusercontent.com/28490587/185748465-1e4ed98c-c617-4e12-91a0-99229ab6f764.png" alt="Create Geocache">  |  <img src="https://user-images.githubusercontent.com/28490587/185748470-d1070f70-0377-4f84-9401-b8cb27491802.png" alt="Created Geocaches">| <img src="https://user-images.githubusercontent.com/28490587/185748467-786b0064-fcd2-4328-b89d-1bed236c6016.png" alt="Navigate to Geocache"> | <img src="https://user-images.githubusercontent.com/28490587/185748462-c3def58b-935e-40b1-88b9-c80383190a0b.png" alt="Catch Geocache">
+<img src="./demo/Bildschirmfoto%202022-11-14%20um%2016.58.56.png" alt="Starter Page ">  |  <img src="./demo/Bildschirmfoto%202022-11-14%20um%2016.59.07.png" alt="Connect Wallet">| <img src="./demo/Bildschirmfoto%202022-11-14%20um%2016.59.20.png" alt="Create Geocache from Token"> | <img src="./demo/Bildschirmfoto%202022-11-14%20um%2017.02.16.png" alt="Confirm Transaction"> | <img src="demo/Bildschirmfoto%202022-11-14%20um%2017.03.15.png" alt="List Geocaches"> |
 
+| Geocache created | Navigate to Geocache | Catch Geocache with Token | Geocache caught
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+|  <img src="./demo/Bildschirmfoto%202022-11-14%20um%2017.02.17.png" alt="Geocache created"> |  <img src="https://user-images.githubusercontent.com/28490587/185748467-786b0064-fcd2-4328-b89d-1bed236c6016.png" alt="Navigate to Geocache"> |  <img src="./demo/Bildschirmfoto%202022-11-14%20um%2017.03.20.png" alt="Catch Geocache with Token"> |  <img src="./demo/Bildschirmfoto%202022-11-14%20um%2017.03.21.png" alt="Geocache caught">
 
 ## 🤕 Problems we ran into
 First of all, we had the major challenge in general of never having worked with Solana, Rust or React-Native before. But of course we embraced that and started by researching the best practices for creating and deploying smart contracts on Solana. We quickly came across Anchor and familiarized ourselves with its Anchor book and the basics of Solana Contracts.
