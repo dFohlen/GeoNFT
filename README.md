@@ -28,7 +28,9 @@
   <p align="center">
     A decentralized NFT geocaching application
     <br />
-    <a href="https://youtu.be/TQ3Ajt4auxU">View Demo</a>
+    <a href="https://youtu.be/TQ3Ajt4auxU">Preview</a>
+    ·
+    <a href="https://geo-nft-eta.vercel.app/">Live Demo</a>
     ·
     <a href="https://github.com/dFohlen/GeoNFT/issues">Report Bug</a>
     ·
@@ -63,6 +65,8 @@ Happy hunting!
 
 
 ## ▶️ Demo Flow
+
+[Live Demo](https://geo-nft-eta.vercel.app/)
 
 1. Connect a Solana compatible wallet of your choice e.g. Phantom
 2. The NFT holder goes to a location of his/her choice where he/she would like to place the NFT.
