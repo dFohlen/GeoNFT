@@ -83,8 +83,15 @@ export default function Geocaches() {
                     <Typography align="center" variant="h5" color={'white'}>
                         Catch or navigate to a geocache
                     </Typography>
-                    <Box display="flex" justifyContent="center">
-                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent' }} dense={true}>
+                    <Box display="flex">
+                        <List
+                            sx={{
+                                width: '100%',
+                                maxWidth: 360,
+                                bgcolor: 'transparent',
+                            }}
+                            dense={true}
+                        >
                             {geocaches.map((geocache: any) => (
                                 <>
                                     <Divider sx={{ bgcolor: 'gray' }} />
@@ -108,7 +115,7 @@ export default function Geocaches() {
                                         }
                                     >
                                         <ListItemAvatar>
-                                            <img style={{ height: 10 }} src={SolanaLogo} />
+                                            <img style={{ height: 20, display: 'block' }} src={SolanaLogo} />
                                         </ListItemAvatar>
                                         <ListItemText
                                             primaryTypographyProps={{ style: { color: 'white' } }}

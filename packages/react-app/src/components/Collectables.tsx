@@ -84,15 +84,19 @@ export default function Collectables() {
                         </Typography>
                         <Box display="flex" justifyContent="center">
                             <List
-                                sx={{ width: '100%', maxWidth: 360, bgcolor: 'transparent', marginTop: 2 }}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: 360,
+                                    bgcolor: 'transparent',
+                                }}
                                 dense={true}
                             >
                                 {nfts.map((item: any) => (
                                     <>
                                         <Divider sx={{ bgcolor: 'gray' }} />
-                                        <ListItem key={item.pubkey} alignItems="flex-start">
+                                        <ListItem key={item.pubkey}>
                                             <ListItemAvatar>
-                                                <img style={{ height: 10 }} src={SolanaLogo} />
+                                                <img style={{ height: 20, display: 'block' }} src={SolanaLogo} />
                                             </ListItemAvatar>
                                             <ListItemButton
                                                 key={item.pubkey}

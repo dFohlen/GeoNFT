@@ -13,7 +13,7 @@ export default function ButtonAppBar() {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" style={{ background: 'transparent' }}>
+            <AppBar position="fixed" style={{ background: 'transparent' }}>
                 <Toolbar>
                     <Box
                         component="img"
