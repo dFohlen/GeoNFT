@@ -89,11 +89,10 @@ const Content: FC = () => {
             <Header />
             <Grid
                 container
-                spacing={5}
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                style={{ minHeight: '100vh' }}
+                style={{ minHeight: '100vh', padding: '10px' }}
             >
                 <Grid item xs={6}>
                     {(!wallet.publicKey || !wallet.connected || !anchorWallet?.publicKey) && (

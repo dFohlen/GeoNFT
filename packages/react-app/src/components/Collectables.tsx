@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Grid, Box, Typography, ListItemAvatar } from '@mui/material';
+import { Box, IconButton, Grid, Typography, ListItemAvatar } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
@@ -14,6 +13,7 @@ import { useGeolocationPosition } from '../hooks/useGeolocationPosition';
 import { ParsedAccountData } from '@solana/web3.js';
 import { useAnchor } from '../hooks/useAnchor';
 import { useSnackbar } from 'notistack';
+import SendIcon from '@mui/icons-material/Send';
 import SolanaLogo from '../assets/solana-sol-logo.svg';
 
 export default function Collectables() {
@@ -94,19 +94,22 @@ export default function Collectables() {
                                 {nfts.map((item: any) => (
                                     <>
                                         <Divider sx={{ bgcolor: 'gray' }} />
-                                        <ListItem key={item.pubkey}>
+                                        <ListItem
+                                            key={item.pubkey}
+                                            secondaryAction={
+                                                <IconButton onClick={() => newGeocache(item.pubkey.toString())}>
+                                                    <SendIcon style={{ color: 'white' }} />
+                                                </IconButton>
+                                            }
+                                        >
                                             <ListItemAvatar>
                                                 <img style={{ height: 20, display: 'block' }} src={SolanaLogo} />
                                             </ListItemAvatar>
-                                            <ListItemButton
-                                                key={item.pubkey}
-                                                onClick={() => newGeocache(item.pubkey.toString())}
-                                            >
-                                                <ListItemText
-                                                    primaryTypographyProps={{ style: { color: 'white' } }}
-                                                    primary={truncateAddress(item.pubkey.toString())}
-                                                />
-                                            </ListItemButton>
+
+                                            <ListItemText
+                                                primaryTypographyProps={{ style: { color: 'white' } }}
+                                                primary={truncateAddress(item.pubkey.toString())}
+                                            />
                                         </ListItem>
                                     </>
                                 ))}
